@@ -958,16 +958,16 @@ h1, h2, h3 { text-wrap: balance; }
 
 # MODULE 7: DATA TABLE REFERENCES
 
-The full data tables (60 UI styles, 48 color palettes, 36 font pairings, 21 industry rules) are stored as CSV files in the `ui-ux-pro-max-v8-data` skill for efficient lookup. Reference them when you need to match an industry/domain to a specific style, palette, font, or rule.
+The full data tables (67 UI styles, 96 color palettes, 57 font pairings, 100 industry reasoning rules) are stored as CSV files in the `ui-ux-pro-max-v8-data` skill for efficient lookup. Reference them when you need to match an industry/domain to a specific style, palette, font, or rule.
 
 ## CSV File Map
 
 | Data Category | CSV Path | Content |
 |---------------|----------|---------|
-| UI Styles | `ui-ux-pro-max-v8-data/data/styles.csv` | 60 curated styles with performance, a11y, key effects |
-| Color Palettes | `ui-ux-pro-max-v8-data/data/colors.csv` | 48 palettes with OKLCH + Hex, primary/secondary/CTA/bg/text |
-| Font Pairings | `ui-ux-pro-max-v8-data/data/typography.csv` | 36 verified Google Fonts pairs with mood, best-for, URLs |
-| Industry Rules | `ui-ux-pro-max-v8-data/data/ui-reasoning.csv` | 21 rules: pattern, style, color mood, typography, effects, anti-patterns |
+| UI Styles | `ui-ux-pro-max-v8-data/data/styles.csv` | 67 curated styles with performance, a11y, key effects |
+| Color Palettes | `ui-ux-pro-max-v8-data/data/colors.csv` | 96 palettes with OKLCH + Hex, primary/secondary/CTA/bg/text |
+| Font Pairings | `ui-ux-pro-max-v8-data/data/typography.csv` | 57 verified Google Fonts pairs with mood, best-for, URLs |
+| Industry Rules | `ui-ux-pro-max-v8-data/data/ui-reasoning.csv` | 100 rules: pattern, style, color mood, typography, effects, anti-patterns |
 | Landing Patterns | `ui-ux-pro-max-v8-data/data/landing.csv` | 8 landing page patterns with conversion focus |
 | UX Guidelines | `ui-ux-pro-max-v8-data/data/ux-guidelines.csv` | Accessibility and UX audit guidelines |
 | Web Interface | `ui-ux-pro-max-v8-data/data/web-interface.csv` | Web interface audit criteria |
@@ -979,18 +979,18 @@ The full data tables (60 UI styles, 48 color palettes, 36 font pairings, 21 indu
 
 ## Quick Reference: Data Categories
 
-### UI Styles (60)
+### UI Styles (67)
 - **General (42):** Minimalism, Neumorphism, Glassmorphism, Brutalism, 3D, Dark Mode OLED, Accessible & Ethical, Claymorphism, Aurora UI, Retro-Futurism, Flat Design 2.0, Soft UI, Neubrutalism, Bento Grid, Y2K, Cyberpunk, Biophilic, AI-Native UI, Vaporwave, Dimensional Layering, Exaggerated Minimalism, Kinetic Typography, Parallax Storytelling, Swiss Modernism 2.0, HUD/Sci-Fi FUI, Pixel Art, Spatial UI, E-Ink/Paper, Gen Z Chaos, Biomimetic, Anti-Polish/Raw, Tactile Digital, Nature Distilled, Interactive Cursor, Voice-First, 3D Product Preview, Gradient Mesh/Aurora Evolved, Editorial Grid, Chromatic Aberration, Vintage Analog, Liquid Glass
 - **Landing (8):** Hero-Centric, Conversion-Optimized, Feature-Rich Showcase, Minimal & Direct, Social Proof-Focused, Interactive Demo, Trust & Authority, Storytelling-Driven
 - **Dashboard (10):** Data-Dense, Heat Map, Executive, Real-Time Monitoring, Drill-Down, Comparative, Predictive, User Behavior, Financial, Sales Intelligence
 
-### Color Palettes (48 — OKLCH + Hex)
+### Color Palettes (96 — OKLCH + Hex)
 SaaS & Tech (8), E-Commerce (8), Healthcare (6), Finance & Insurance (6), Beauty & Wellness (6), Creative & Education (8), Restaurant & Hospitality (6)
 
-### Font Pairings (36 — Verified Google Fonts)
+### Font Pairings (57 — Verified Google Fonts)
 Sans-Serif Pairs (16), Serif + Sans Pairs (12), Monospace + Sans Pairs (5), Self-Hosted Fonts (16 alternatives)
 
-### Industry Rules (21)
+### Industry Rules (100)
 Technology & SaaS (5), Finance & Insurance (4), Healthcare (4), E-Commerce & Services (4), Creative & Education (4)
 
 ---

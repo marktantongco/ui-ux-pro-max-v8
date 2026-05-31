@@ -86,7 +86,7 @@ Before generating ANY UI, scan the request and existing code for these 34 red fl
 | # | Red Flag | Detection | Fix |
 |---|----------|-----------|-----|
 | 1 | Math.random() in SSR component | Search for Math.random inside render | Use deterministic pseudo-random: `(index * 9301 + 49297) % 233280 / 233280` |
-| 2 | Broken Google Fonts URLs | Font not on fonts.google.com | Replace with verified alternatives (see Part A Module 7.3) |
+| 2 | Broken Google Fonts URLs | Font not on fonts.google.com | Replace with verified alternatives (see Part C typography.csv) |
 | 3 | Zero keyboard navigation | Tabs/Accordion with no key handlers | Add roving tabindex + arrow keys + Home/End (see Module 4) |
 | 4 | Modal without focus trap | aria-describedby, aria-controls missing | Add focus trap + inert backdrop + aria-describedby |
 | 5 | color-scheme without OKLCH fallback | Only hex in dark mode tokens | Add OKLCH with hex fallback for older browsers |
@@ -119,7 +119,7 @@ Before generating ANY UI, scan the request and existing code for these 34 red fl
 | 22 | No content-visibility | Long lists without content-visibility | Add content-visibility: auto on off-screen list items |
 | 23 | No CSS nesting | Deep BEM or excessive utility repetition | Use native CSS nesting (see Part A Module 3) |
 | 24 | Missing design tokens | Hard-coded color/spacing values | Extract to CSS custom properties |
-| 25 | Stale tool references | References to deprecated tools | Update to 2026 ecosystem (see Part A Module 7.4) |
+| 25 | Stale tool references | References to deprecated tools | Update to 2026 ecosystem (see Part C product.csv, style.csv) |
 | 26 | No container queries | Responsive via media queries only | Add container queries for component-level responsive |
 | 27 | Missing loading/empty/error states | Only happy path implemented | Add all three states for every data-dependent component |
 | 28 | No @layer usage | All CSS at same specificity level | Organize into @layer base, components, utilities |
@@ -134,7 +134,7 @@ Before generating ANY UI, scan the request and existing code for these 34 red fl
 
 ```
 IDENTIFY  → Parse request, detect industry, stack, constraints
-MATCH     → Search data tables (Part A Module 7) for best-fit style/palette/font/rule
+MATCH     → Search data tables (Part C) for best-fit style/palette/font/rule
 COMMIT    → Generate design system with OKLCH tokens (Part A Module 2)
 CHECK     → Run anti-pattern checklist (1.2) + validation (Module 6)
 ```
@@ -729,19 +729,21 @@ function useFocusTrap(active: boolean) {
 
 ```tsx
 function ScreenReaderAnnouncer() {
+  // NOTE: Using a stable ID for the announcer since it's a singleton.
+  // If multiple instances are needed, wrap in a provider with useId().
   return (
     <div
       aria-live="polite"
       aria-atomic="true"
       className="sr-only"
-      id="sr-announcer"
+      data-sr-announcer
     />
   );
 }
 
 // Usage: Update the announcer to communicate state changes
 function announceToScreenReader(message: string) {
-  const announcer = document.getElementById('sr-announcer');
+  const announcer = document.querySelector('[data-sr-announcer]');
   if (announcer) {
     announcer.textContent = '';
     requestAnimationFrame(() => {
@@ -929,13 +931,15 @@ function AIControlsPanel({ model, temperature, onModelChange, onTemperatureChang
   onModelChange: (model: string) => void;
   onTemperatureChange: (temp: number) => void;
 }) {
+  const modelId = useId();
+  const tempId = useId();
   return (
     <fieldset className="border rounded-lg p-4 space-y-3 dark:border-gray-700">
       <legend className="text-sm font-medium px-2 dark:text-gray-300">AI Settings</legend>
       <div className="flex items-center gap-3">
-        <label htmlFor="ai-model" className="text-sm text-gray-600 dark:text-gray-400 w-24">Model</label>
+        <label htmlFor={modelId} className="text-sm text-gray-600 dark:text-gray-400 w-24">Model</label>
         <select
-          id="ai-model"
+          id={modelId}
           value={model}
           onChange={(e) => onModelChange(e.target.value)}
           className="flex-1 px-3 py-1.5 rounded border text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
@@ -946,9 +950,9 @@ function AIControlsPanel({ model, temperature, onModelChange, onTemperatureChang
         </select>
       </div>
       <div className="flex items-center gap-3">
-        <label htmlFor="ai-temp" className="text-sm text-gray-600 dark:text-gray-400 w-24">Temperature: {temperature}</label>
+        <label htmlFor={tempId} className="text-sm text-gray-600 dark:text-gray-400 w-24">Temperature: {temperature}</label>
         <input
-          id="ai-temp"
+          id={tempId}
           type="range"
           min="0"
           max="2"
@@ -1174,10 +1178,11 @@ function Select({
 
   return (
     <div ref={setRef} className="relative">
-      <label htmlFor={buttonId} className="block text-sm font-medium mb-1 dark:text-gray-300">{label}</label>
+      <label id={`${buttonId}-label`} className="block text-sm font-medium mb-1 dark:text-gray-300">{label}</label>
       <button
         id={buttonId}
         role="combobox"
+        aria-labelledby={`${buttonId}-label`}
         aria-expanded={isOpen}
         aria-controls={listboxId}
         aria-activedescendant={activeIndex >= 0 ? `${listboxId}-${enabledOptions[activeIndex]?.value}` : undefined}
@@ -1380,6 +1385,9 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
     resolver: zodResolver(contactSchema),
   });
   const subscribeId = useId();
+  const nameErrorId = useId();
+  const emailErrorId = useId();
+  const messageErrorId = useId();
 
   const handleFormSubmit = async (data: ContactForm) => {
     await onSubmit(data);
@@ -1395,14 +1403,14 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
         <input
           type="text"
           aria-invalid={!!errors.name}
-          aria-describedby={errors.name ? 'name-error' : undefined}
+          aria-describedby={errors.name ? nameErrorId : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('name')}
         />
-        {errors.name && <p id="name-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
+        {errors.name && <p id={nameErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -1412,14 +1420,14 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
         <input
           type="email"
           aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? 'email-error' : undefined}
+          aria-describedby={errors.email ? emailErrorId : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('email')}
         />
-        {errors.email && <p id="email-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>}
+        {errors.email && <p id={emailErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>}
       </div>
 
       <div>
@@ -1429,14 +1437,14 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
         <textarea
           rows={4}
           aria-invalid={!!errors.message}
-          aria-describedby={errors.message ? 'message-error' : undefined}
+          aria-describedby={errors.message ? messageErrorId : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('message')}
         />
-        {errors.message && <p id="message-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>}
+        {errors.message && <p id={messageErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>}
       </div>
 
       <div className="flex items-center gap-2">
@@ -1456,7 +1464,7 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
 }
 ```
 
-> **Fix:** Removed hard-coded `id="name"`, `id="email"`, `id="message"` from form inputs. React Hook Form's `register()` manages IDs internally when combined with `useId()`. Hard-coded IDs cause duplicates when multiple form instances are rendered. Error `<p>` elements use stable IDs (`name-error`, `email-error`, `message-error`) that are unique within each form instance.
+> **Fix:** Removed hard-coded IDs from form error elements (`name-error`, `email-error`, `message-error`) and replaced with `useId()`-generated IDs. Hard-coded error IDs cause duplicates when multiple form instances are rendered. Now each form instance gets unique IDs via `useId()`, and `aria-describedby` correctly references the generated error IDs.
 
 ## 4.15 Toast with CSS Progress Animation
 
@@ -1538,6 +1546,15 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
         .animate-toast-in {
           animation: toast-in 0.3s ease-out;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-toast-in {
+            animation: none;
+          }
+          .toast-progress-bar {
+            animation: none !important;
+            width: 100%;
+          }
+        }
       `}</style>
     </div>
   );
@@ -1568,7 +1585,7 @@ function useToast() {
 
 ```tsx
 'use client';
-import { useState, useCallback, useRef, useId } from 'react';
+import { useState, useCallback, useRef, useId, useEffect } from 'react';
 
 export interface NavItem {
   label: string;
@@ -1584,6 +1601,13 @@ function Navbar({ brand, items, actions }: {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const menuId = useId();
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Focus management: trap focus in mobile menu when open
+  useEffect(() => {
+    if (!isMobileOpen || !mobileMenuRef.current) return;
+    const firstLink = mobileMenuRef.current.querySelector('a, button');
+    firstLink?.focus();
+  }, [isMobileOpen]);
 
   return (
     <nav aria-label="Main navigation" className="sticky top-0 z-[var(--z-sticky)] bg-white dark:bg-gray-900 border-b dark:border-gray-700">
@@ -1701,7 +1725,7 @@ function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
               ) : (
                 <a
                   href={item.href}
-                  className="text-primary hover:underline dark:text-primary-light"
+                  className="text-primary hover:underline dark:text-primary"
                   itemProp="item"
                 >
                   <span itemProp="name">{item.label}</span>

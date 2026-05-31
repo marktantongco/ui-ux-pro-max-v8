@@ -66,15 +66,15 @@ Essential design rules for applying data lookups correctly. For full theory, see
 |--------|------|---------|-------------|
 | `color` | `data/colors.csv` | 96 | Color palettes per product type/industry |
 | `style` | `data/styles.csv` | 67 | UI style specifications (22 columns) |
-| `typography` | `data/typography.csv` | 56 | Font pairing recommendations |
-| `ux` | `data/ux-guidelines.csv` | 98 | UX do/don't guidelines |
+| `typography` | `data/typography.csv` | 57 | Font pairing recommendations |
+| `ux` | `data/ux-guidelines.csv` | 99 | UX do/don't guidelines |
 | `chart` | `data/charts.csv` | 25 | Chart type recommendations |
 | `icon` | `data/icons.csv` | 100 | Lucide icon mappings |
 | `reasoning` | `data/ui-reasoning.csv` | 100 | Product → UI pattern reasoning engine |
 | `web` | `data/web-interface.csv` | 30 | Web interface guidelines (React/Next.js) |
 | `performance` | `data/react-performance.csv` | 44 | React/Next.js performance patterns |
 | `landing` | `data/landing.csv` | 30 | Landing page pattern specs |
-| `product` | `data/products.csv` | 95 | Product type → style/pattern mapping |
+| `product` | `data/products.csv` | 96 | Product type → style/pattern mapping |
 | `stack:astro` | `data/stacks/astro.csv` | 53 | Astro framework best practices |
 | `stack:flutter` | `data/stacks/flutter.csv` | 52 | Flutter framework best practices |
 | `stack:html-tailwind` | `data/stacks/html-tailwind.csv` | 55 | HTML + Tailwind CSS best practices |
@@ -89,7 +89,7 @@ Essential design rules for applying data lookups correctly. For full theory, see
 | `stack:swiftui` | `data/stacks/swiftui.csv` | 50 | SwiftUI best practices |
 | `stack:vue` | `data/stacks/vue.csv` | 49 | Vue.js best practices |
 
-**Total: 24 data files, 1,321 records across 11 core domains + 13 framework stacks.**
+**Total: 24 data files, 1,325 records across 11 core domains + 13 framework stacks.**
 
 ## Lookup Script Usage
 

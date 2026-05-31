@@ -53,8 +53,8 @@
     {
       "path": "data/typography.csv",
       "domain": "typography",
-      "recordCount": 56,
-      "description": "Font pairing recommendations for 56 categories/moods. Includes heading and body font, mood keywords, Google Fonts URLs, CSS imports, and Tailwind configs.",
+      "recordCount": 57,
+      "description": "Font pairing recommendations for 57 categories/moods. Includes heading and body font, mood keywords, Google Fonts URLs, CSS imports, and Tailwind configs.",
       "schema": [
         {"column": "No", "type": "integer", "description": "Row index"},
         {"column": "Font Pairing Name", "type": "string", "description": "Name of the font pairing"},
@@ -72,7 +72,7 @@
     {
       "path": "data/ux-guidelines.csv",
       "domain": "ux",
-      "recordCount": 98,
+      "recordCount": 99,
       "description": "UX do/don't guidelines covering Navigation, Animation, Layout, Touch, Interaction, Accessibility, Performance, Forms, Responsive, Typography, Feedback, Content, Onboarding, Search, Data Entry, AI Interaction, Spatial UI, and Sustainability.",
       "schema": [
         {"column": "No", "type": "integer", "description": "Row index"},
@@ -197,8 +197,8 @@
     {
       "path": "data/products.csv",
       "domain": "product",
-      "recordCount": 95,
-      "description": "Complete product type mapping for 95 industries/categories. Maps each product type to primary/secondary styles, landing page patterns, dashboard styles, color palettes, and key considerations.",
+      "recordCount": 96,
+      "description": "Complete product type mapping for 96 industries/categories. Maps each product type to primary/secondary styles, landing page patterns, dashboard styles, color palettes, and key considerations.",
       "schema": [
         {"column": "No", "type": "integer", "description": "Row index"},
         {"column": "Product Type", "type": "string", "description": "Industry or product category"},
