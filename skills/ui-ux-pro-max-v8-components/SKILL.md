@@ -1,67 +1,31 @@
 ---
-name: ui-ux-pro-max-v8-components
+name: ui-ux-pro-max-components
 description: >
-  UI/UX Pro Max v8.0 — Build & Code Layer. ACTIVATE when the query is about:
-  React component implementations, accessibility (a11y), motion presets, validation/audit,
-  advanced patterns, creative brief workflows, error boundaries, form handling, GSAP animations,
-  keyboard navigation, ARIA attributes, or any "build"/"implement"/"code" intent.
-  Contains Module 1 (Creative Brief Engine), Module 4 (Component Library with 22+ components),
-  Module 5 (Motion Presets — 24 patterns), Module 6 (Validation & Audit — 80+ checks),
-  Module 8 (Cross-Reference Integration), and Module 10 (Advanced Patterns).
-  For design tokens, CSS primitives, palettes, and theming, use ui-ux-pro-max-v8-infra.
-  For data lookups (palette for industry, font pairing, style specs), use ui-ux-pro-max-v8-data.
+  UI/UX Pro Max v8.0 — Components, Patterns & Validation. Use this file when the query is about
+  React components, accessibility (a11y), motion presets, validation/audit, advanced patterns,
+  or creative brief workflows. Contains Module 1 (Creative Brief Engine), Module 4 (Component Library
+  with 25+ components: Accordion, Tabs, Modal/Dialog, Skeleton, SkipLink, FocusTrap, ScreenReader,
+  CursorFollower, AI Patterns, ImageReveal, Select, Checkbox/Switch, Textarea, Form, Toast, Navbar,
+  Breadcrumb, Tooltip, PasswordInput, RadioGroup, DataTable, Pagination, Drawer/Sheet, Avatar,
+  CommandPalette), Module 5 (Motion Presets — 12 CSS + 12 GSAP), Module 6 (Validation & Audit),
+  Module 8 (Cross-Reference Integration), Module 10 (Advanced Patterns: ErrorBoundary, DataState,
+  IntersectionObserver, ContainerQuery, CSS Nesting). For design tokens, CSS primitives, data tables,
+  and theming, see PART-A-INFRASTRUCTURE.md.
 version: "8.0.0"
 ---
 
-# UI/UX Pro Max v8.0 — Part B: Build & Code Components
+# UI/UX Pro Max v8.0 — Part B: Components & Patterns
 
-> **Component Library and Implementation Patterns** — React 19 components, a11y, motion, validation, and advanced patterns.
-> Pair with Part A (ui-ux-pro-max-v8-infra) for design tokens, CSS primitives, and theming.
-> Pair with Part C (ui-ux-pro-max-v8-data) for programmatic data lookups.
+> **Component Library and Implementation Patterns** — Components, motion, validation, and advanced patterns.
+> Pair with Part A for design tokens, CSS primitives, and theming.
 
-## SILENT PROTOCOL (Invisible Routing)
+## Cross-Reference: Part A Dependencies
 
-Before responding to any UI/UX query, silently diagnose:
-1. **What do they actually need?** Parse beyond the literal ask. "Build a modal" → need component code (THIS PART). "Pick colors" → need design tokens (PART A). "What palette for fintech?" → need data lookup (PART C).
-2. **What's the one thing they'd miss?** The gap. "Build a form" → missing: a11y keyboard nav. "Add dark mode" → missing: token architecture.
-3. **What's the simplest true answer?** Direct component code if query is build-focused. Cross-reference to Part A/C if query needs design context.
-
-## Intent Routing Decision Tree
-
-```
-What is the PRIMARY intent?
-│
-├─► BUILD / IMPLEMENT / CODE
-│   ├─► React component? → THIS FILE (Part B)
-│   ├─► Accessibility fix? → THIS FILE (Part B, Module 4 + 6)
-│   ├─► Animation / motion? → THIS FILE (Part B, Module 5)
-│   ├─► Form validation? → THIS FILE (Part B, Module 4.14 + 6)
-│   └─► Full build (design + code)? → Part A (tokens) + THIS FILE (components)
-│
-├─► DESIGN / STYLE / VISUAL
-│   ├─► Color palette? → Part A (ui-ux-pro-max-v8-infra)
-│   ├─► Typography / spacing? → Part A
-│   ├─► Theme / dark mode? → Part A (Module 9)
-│   └─► CSS primitives? → Part A (Module 3)
-│
-└─► LOOKUP / DATA / REFERENCE
-    ├─► Palette for industry? → Part C (ui-ux-pro-max-v8-data)
-    ├─► Font pairing? → Part C
-    ├─► Style specification? → Part C
-    └─► UX rule? → Part C
-```
-
-## Cross-Reference: Part A & Part C Dependencies
-
-This file provides component implementations and patterns. For design context and data:
-- **Part A (ui-ux-pro-max-v8-infra)**: Design tokens, CSS primitives, theming → Module 4 components consume these
-- **Part C (ui-ux-pro-max-v8-data)**: Data lookups → Module 1 MATCH step queries these CSV files
+This file provides component implementations and patterns. For design tokens, CSS primitives, data tables, and theming, see PART-A-INFRASTRUCTURE.md.
 - Module 4 components → consume Part A Module 2 tokens and Module 9 themes
-- Module 1 MATCH step → queries Part C data files for best-fit style/palette/font/rule
+- Module 1 MATCH step → queries Part A Module 7 data tables
 - Module 5 motion presets → reference Part A Module 3 CSS primitives
 - Module 6 validation → checks Part A Module 2 contrast compliance
-
-> **Module Numbering:** This file contains Modules 1, 4, 5, 6, 8, 10. Modules 2, 3, 7, 9 are in Part A (ui-ux-pro-max-v8-infra). Module 7 data files are in Part C (ui-ux-pro-max-v8-data).
 
 ---
 
@@ -88,7 +52,7 @@ Before generating ANY UI, scan the request and existing code for these 34 red fl
 | # | Red Flag | Detection | Fix |
 |---|----------|-----------|-----|
 | 1 | Math.random() in SSR component | Search for Math.random inside render | Use deterministic pseudo-random: `(index * 9301 + 49297) % 233280 / 233280` |
-| 2 | Broken Google Fonts URLs | Font not on fonts.google.com | Replace with verified alternatives (see Part C typography.csv) |
+| 2 | Broken Google Fonts URLs | Font not on fonts.google.com | Replace with verified alternatives (see Part A Module 7.3) |
 | 3 | Zero keyboard navigation | Tabs/Accordion with no key handlers | Add roving tabindex + arrow keys + Home/End (see Module 4) |
 | 4 | Modal without focus trap | aria-describedby, aria-controls missing | Add focus trap + inert backdrop + aria-describedby |
 | 5 | color-scheme without OKLCH fallback | Only hex in dark mode tokens | Add OKLCH with hex fallback for older browsers |
@@ -121,7 +85,7 @@ Before generating ANY UI, scan the request and existing code for these 34 red fl
 | 22 | No content-visibility | Long lists without content-visibility | Add content-visibility: auto on off-screen list items |
 | 23 | No CSS nesting | Deep BEM or excessive utility repetition | Use native CSS nesting (see Part A Module 3) |
 | 24 | Missing design tokens | Hard-coded color/spacing values | Extract to CSS custom properties |
-| 25 | Stale tool references | References to deprecated tools | Update to 2026 ecosystem (see Part C product.csv, style.csv) |
+| 25 | Stale tool references | References to deprecated tools | Update to 2026 ecosystem (see Part A Module 7.4) |
 | 26 | No container queries | Responsive via media queries only | Add container queries for component-level responsive |
 | 27 | Missing loading/empty/error states | Only happy path implemented | Add all three states for every data-dependent component |
 | 28 | No @layer usage | All CSS at same specificity level | Organize into @layer base, components, utilities |
@@ -136,7 +100,7 @@ Before generating ANY UI, scan the request and existing code for these 34 red fl
 
 ```
 IDENTIFY  → Parse request, detect industry, stack, constraints
-MATCH     → Search data tables (Part C) for best-fit style/palette/font/rule
+MATCH     → Search data tables (Part A Module 7) for best-fit style/palette/font/rule
 COMMIT    → Generate design system with OKLCH tokens (Part A Module 2)
 CHECK     → Run anti-pattern checklist (1.2) + validation (Module 6)
 ```
@@ -152,35 +116,22 @@ Extract from user request:
 ```
 
 ### MATCH Step
-Search Part C data files for best-fit style/palette/font/rule:
+Run the design system generator:
 ```bash
-# Search all domains for a product type
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain product --query "<product_type>" --format json
-
-# Search for matching styles
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain style --query "<style_keywords>" --format json
-
-# Search for color palettes
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain color --query "<product_type>" --format json
-
-# Search for font pairings
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain typography --query "<mood_keywords>" --format json
-
-# Search for industry reasoning rules
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain reasoning --query "<product_type>" --format json
+python3 skills/ui-ux-pro-max/scripts/search.py "<product_type> <style_keywords>" --design-system -p "Project Name"
 ```
 
-Available domains: product, style, color, typography, reasoning, ux, chart, icon, web, performance, landing, stack:nextjs, stack:react, stack:vue, stack:svelte, stack:astro, stack:shadcn, stack:html-tailwind, stack:nuxtjs, stack:nuxt-ui, stack:react-native, stack:flutter, stack:swiftui, stack:jetpack-compose
-
-Use `--list-domains` to see all available domains:
+Or search individual domains:
 ```bash
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --list-domains
+python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
 ```
+
+Available domains: product, style, color, landing, typography, chart, ux, icons, react, web
 
 ### COMMIT Step
 Generate the design system with persistence:
 ```bash
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py "<query>" --design-system --persist -p "Project Name"
+python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
 ```
 
 This creates:
@@ -349,7 +300,6 @@ function AccordionItemComponent({
           id={triggerId}
           aria-expanded={isOpen}
           aria-controls={contentId}
-          disabled={item.disabled}
           aria-disabled={item.disabled}
           data-item-id={item.id}
           onClick={item.disabled ? undefined : onToggle}
@@ -439,7 +389,7 @@ function Tabs({ items, defaultTab, ref }: TabsProps) {
 
   return (
     <div ref={ref}>
-      <div role="tablist" aria-label="Content tabs" aria-orientation="horizontal" onKeyDown={handleKeyDown}>
+      <div role="tablist" aria-label="Content tabs" onKeyDown={handleKeyDown}>
         {items.map((item) => (
           <button
             key={item.id}
@@ -447,7 +397,6 @@ function Tabs({ items, defaultTab, ref }: TabsProps) {
             role="tab"
             aria-selected={activeTab === item.id}
             aria-controls={`${tabListId}-panel-${item.id}`}
-            disabled={item.disabled}
             aria-disabled={item.disabled}
             tabIndex={activeTab === item.id ? 0 : -1}
             onClick={() => !item.disabled && setActiveTab(item.id)}
@@ -668,8 +617,6 @@ function SkeletonCard({ index }: { index: number }) {
 
 > **Fix:** Removed `aria-hidden="true"` from the Skeleton component. `role="status"` makes this a live region that screen readers should announce — adding `aria-hidden="true"` contradicts that purpose and makes the loading state invisible to assistive technologies.
 
-> **Note:** `animate-pulse` respects `prefers-reduced-motion` in Tailwind v4 by default. In Tailwind v3 or custom setups, add: `@media (prefers-reduced-motion: reduce) { .animate-pulse { animation: none; } }`
-
 ## 4.5 Skip Link
 
 ```tsx
@@ -735,21 +682,19 @@ function useFocusTrap(active: boolean) {
 
 ```tsx
 function ScreenReaderAnnouncer() {
-  // NOTE: Using a stable ID for the announcer since it's a singleton.
-  // If multiple instances are needed, wrap in a provider with useId().
   return (
     <div
       aria-live="polite"
       aria-atomic="true"
       className="sr-only"
-      data-sr-announcer
+      id="sr-announcer"
     />
   );
 }
 
 // Usage: Update the announcer to communicate state changes
 function announceToScreenReader(message: string) {
-  const announcer = document.querySelector('[data-sr-announcer]');
+  const announcer = document.getElementById('sr-announcer');
   if (announcer) {
     announcer.textContent = '';
     requestAnimationFrame(() => {
@@ -777,13 +722,6 @@ function CursorFollower() {
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      cursor.style.display = 'none';
-      return;
-    }
-
-    // Check for touch-primary devices
-    const isTouchPrimary = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouchPrimary) {
       cursor.style.display = 'none';
       return;
     }
@@ -833,8 +771,6 @@ function ThinkingIndicator() {
   );
 }
 ```
-
-> **Note:** `animate-bounce` respects `prefers-reduced-motion` in Tailwind v4 by default. In Tailwind v3 or custom setups, add: `@media (prefers-reduced-motion: reduce) { .animate-bounce { animation: none; } }`
 
 ### Uncertainty Notice
 
@@ -930,30 +866,22 @@ function ChatComposer({ onSend, disabled }: {
 }
 ```
 
-> **Enhancement:** For production use, add `error?: string` prop, `aria-invalid={!!error}` on the textarea, and error message rendering consistent with Textarea (4.13) and PasswordInput (4.19) components.
-
 ### AI Controls Panel
 
 ```tsx
-'use client';
-
-import { useId } from 'react';
-
 function AIControlsPanel({ model, temperature, onModelChange, onTemperatureChange }: {
   model: string;
   temperature: number;
   onModelChange: (model: string) => void;
   onTemperatureChange: (temp: number) => void;
 }) {
-  const modelId = useId();
-  const tempId = useId();
   return (
     <fieldset className="border rounded-lg p-4 space-y-3 dark:border-gray-700">
       <legend className="text-sm font-medium px-2 dark:text-gray-300">AI Settings</legend>
       <div className="flex items-center gap-3">
-        <label htmlFor={modelId} className="text-sm text-gray-600 dark:text-gray-400 w-24">Model</label>
+        <label htmlFor="ai-model" className="text-sm text-gray-600 dark:text-gray-400 w-24">Model</label>
         <select
-          id={modelId}
+          id="ai-model"
           value={model}
           onChange={(e) => onModelChange(e.target.value)}
           className="flex-1 px-3 py-1.5 rounded border text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
@@ -964,9 +892,9 @@ function AIControlsPanel({ model, temperature, onModelChange, onTemperatureChang
         </select>
       </div>
       <div className="flex items-center gap-3">
-        <label htmlFor={tempId} className="text-sm text-gray-600 dark:text-gray-400 w-24">Temperature: {temperature}</label>
+        <label htmlFor="ai-temp" className="text-sm text-gray-600 dark:text-gray-400 w-24">Temperature: {temperature}</label>
         <input
-          id={tempId}
+          id="ai-temp"
           type="range"
           min="0"
           max="2"
@@ -1192,15 +1120,13 @@ function Select({
 
   return (
     <div ref={setRef} className="relative">
-      <label id={`${buttonId}-label`} className="block text-sm font-medium mb-1 dark:text-gray-300">{label}</label>
+      <label htmlFor={buttonId} className="block text-sm font-medium mb-1 dark:text-gray-300">{label}</label>
       <button
         id={buttonId}
         role="combobox"
-        aria-labelledby={`${buttonId}-label`}
         aria-expanded={isOpen}
         aria-controls={listboxId}
         aria-activedescendant={activeIndex >= 0 ? `${listboxId}-${enabledOptions[activeIndex]?.value}` : undefined}
-        aria-autocomplete="none"
         aria-haspopup="listbox"
         onClick={() => setIsOpen(prev => !prev)}
         onKeyDown={handleKeyDown}
@@ -1378,7 +1304,6 @@ function Textarea({
 ```tsx
 'use client';
 
-import { useId } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -1398,13 +1323,6 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
   } = useForm<ContactForm>({
     resolver: zodResolver(contactSchema),
   });
-  const nameId = useId();
-  const emailId = useId();
-  const messageId = useId();
-  const subscribeId = useId();
-  const nameErrorId = useId();
-  const emailErrorId = useId();
-  const messageErrorId = useId();
 
   const handleFormSubmit = async (data: ContactForm) => {
     await onSubmit(data);
@@ -1414,62 +1332,59 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate className="space-y-4">
       <div>
-        <label htmlFor={nameId} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Name <span aria-hidden="true" className="text-red-500">*</span>
         </label>
         <input
-          id={nameId}
           type="text"
           aria-invalid={!!errors.name}
-          aria-describedby={errors.name ? nameErrorId : undefined}
+          aria-describedby={errors.name ? 'name-error' : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('name')}
         />
-        {errors.name && <p id={nameErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
+        {errors.name && <p id="name-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
       </div>
 
       <div>
-        <label htmlFor={emailId} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Email <span aria-hidden="true" className="text-red-500">*</span>
         </label>
         <input
-          id={emailId}
           type="email"
           aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? emailErrorId : undefined}
+          aria-describedby={errors.email ? 'email-error' : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('email')}
         />
-        {errors.email && <p id={emailErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>}
+        {errors.email && <p id="email-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>}
       </div>
 
       <div>
-        <label htmlFor={messageId} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Message <span aria-hidden="true" className="text-red-500">*</span>
         </label>
         <textarea
-          id={messageId}
           rows={4}
           aria-invalid={!!errors.message}
-          aria-describedby={errors.message ? messageErrorId : undefined}
+          aria-describedby={errors.message ? 'message-error' : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('message')}
         />
-        {errors.message && <p id={messageErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>}
+        {errors.message && <p id="message-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>}
       </div>
 
       <div className="flex items-center gap-2">
-        <input id={subscribeId} type="checkbox" className="h-4 w-4 rounded accent-primary" {...register('subscribe')} />
-        <label htmlFor={subscribeId} className="text-sm text-gray-700 dark:text-gray-300">Subscribe to newsletter</label>
+        <input type="checkbox" className="h-4 w-4 rounded accent-primary" {...register('subscribe')} />
+        <label className="text-sm text-gray-700 dark:text-gray-300">Subscribe to newsletter</label>
       </div>
 
       <button
@@ -1484,7 +1399,7 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
 }
 ```
 
-> **Fix:** Removed hard-coded IDs from form error elements (`name-error`, `email-error`, `message-error`) and replaced with `useId()`-generated IDs. Hard-coded error IDs cause duplicates when multiple form instances are rendered. Now each form instance gets unique IDs via `useId()`, and `aria-describedby` correctly references the generated error IDs.
+> **Fix:** Removed hard-coded `id="name"`, `id="email"`, `id="message"` from form inputs. React Hook Form's `register()` manages IDs internally when combined with `useId()`. Hard-coded IDs cause duplicates when multiple form instances are rendered. Error `<p>` elements use stable IDs (`name-error`, `email-error`, `message-error`) that are unique within each form instance.
 
 ## 4.15 Toast with CSS Progress Animation
 
@@ -1548,7 +1463,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
         </button>
       </div>
       <div
-        className="h-1 bg-white/30 toast-progress-bar"
+        className="h-1 bg-white/30"
         style={{
           animation: `toast-progress ${duration}ms linear forwards`,
         }}
@@ -1565,15 +1480,6 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
         }
         .animate-toast-in {
           animation: toast-in 0.3s ease-out;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-toast-in {
-            animation: none;
-          }
-          .toast-progress-bar {
-            animation: none !important;
-            width: 100%;
-          }
         }
       `}</style>
     </div>
@@ -1605,7 +1511,7 @@ function useToast() {
 
 ```tsx
 'use client';
-import { useState, useCallback, useRef, useId, useEffect } from 'react';
+import { useState, useCallback, useRef, useId } from 'react';
 
 export interface NavItem {
   label: string;
@@ -1621,13 +1527,6 @@ function Navbar({ brand, items, actions }: {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const menuId = useId();
   const mobileMenuRef = useRef<HTMLDivElement>(null);
-
-  // Focus management: trap focus in mobile menu when open
-  useEffect(() => {
-    if (!isMobileOpen || !mobileMenuRef.current) return;
-    const firstLink = mobileMenuRef.current.querySelector('a, button');
-    firstLink?.focus();
-  }, [isMobileOpen]);
 
   return (
     <nav aria-label="Main navigation" className="sticky top-0 z-[var(--z-sticky)] bg-white dark:bg-gray-900 border-b dark:border-gray-700">
@@ -1745,7 +1644,7 @@ function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
               ) : (
                 <a
                   href={item.href}
-                  className="text-primary hover:underline dark:text-primary"
+                  className="text-primary hover:underline dark:text-primary-light"
                   itemProp="item"
                 >
                   <span itemProp="name">{item.label}</span>
@@ -2116,30 +2015,26 @@ function DataTable<T extends Record<string, unknown>>({
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                No data available
-              </td>
+          {sortedData.map((row, i) => (
+            <tr
+              key={i}
+              className={`border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 transition-colors ${
+                onRowClick ? 'cursor-pointer' : ''
+              }`}
+              onClick={() => onRowClick?.(row)}
+              style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}
+            >
+              {columns.map((col, colIndex) => (
+                <td
+                  key={String(col.key)}
+                  scope={colIndex === 0 ? 'row' : undefined}
+                  className="px-4 py-3 dark:text-gray-300"
+                >
+                  {col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '')}
+                </td>
+              ))}
             </tr>
-          ) : (
-            sortedData.map((row, i) => (
-              <tr
-                key={i}
-                className={`border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 transition-colors ${
-                  onRowClick ? 'cursor-pointer' : ''
-                }`}
-                onClick={() => onRowClick?.(row)}
-                style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}
-              >
-                {columns.map((col) => (
-                  <td key={String(col.key)} className="px-4 py-3 dark:text-gray-300">
-                    {col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '')}
-                  </td>
-                ))}
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
     </div>
@@ -2153,7 +2048,7 @@ function DataTable<T extends Record<string, unknown>>({
 
 ```tsx
 'use client';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 export interface PaginationProps {
   currentPage: number;
@@ -2162,16 +2057,16 @@ export interface PaginationProps {
 }
 
 function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
-  const pageNumbers = useMemo(() => {
-    const pages: (number | string)[] = [];
+  const getPageNumbers = useCallback(() => {
+    const pages: (number | '...')[] = [];
     if (totalPages <= 7) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       pages.push(1);
       if (currentPage > 3) pages.push('...');
-      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-        pages.push(i);
-      }
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = start; i <= end; i++) pages.push(i);
       if (currentPage < totalPages - 2) pages.push('...');
       pages.push(totalPages);
     }
@@ -2188,7 +2083,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
       >
         Previous
       </button>
-      {pageNumbers.map((page, i) =>
+      {getPageNumbers().map((page, i) =>
         page === '...' ? (
           <span key={`ellipsis-${i}`} className="px-2 text-gray-400 dark:text-gray-600" aria-hidden="true">...</span>
         ) : (
@@ -2220,19 +2115,380 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
 }
 ```
 
-## 4.23 Additional Component References
+## 4.23 Drawer / Sheet
+
+A slide-in panel component anchored to any screen edge. Distinct from Modal in its edge-anchored positioning and gesture-like feel. Uses the native Popover API for backdrop behavior with `interpolate-size` for smooth height transitions.
+
+```tsx
+'use client';
+
+import { useState, useCallback, useEffect, useId } from 'react';
+
+export interface DrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  side?: 'left' | 'right' | 'top' | 'bottom';
+  title?: string;
+  children: React.ReactNode;
+  ref?: React.Ref<HTMLDivElement>;
+}
+
+function Drawer({ isOpen, onClose, side = 'right', title, children, ref }: DrawerProps) {
+  const titleId = useId();
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // Prevent body scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [isOpen]);
+
+  const sideClasses = {
+    left: 'inset-y-0 left-0 h-full w-80 max-w-[85vw]',
+    right: 'inset-y-0 right-0 h-full w-80 max-w-[85vw]',
+    top: 'inset-x-0 top-0 h-auto max-h-[85vh]',
+    bottom: 'inset-x-0 bottom-0 h-auto max-h-[85vh]',
+  };
+
+  const slideTransform = {
+    left: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+    right: isOpen ? 'translateX(0)' : 'translateX(100%)',
+    top: isOpen ? 'translateY(0)' : 'translateY(-100%)',
+    bottom: isOpen ? 'translateY(0)' : 'translateY(100%)',
+  };
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 z-[var(--z-overlay)] bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      {/* Panel */}
+      <div
+        ref={ref}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        className={`fixed z-[var(--z-modal)] bg-white dark:bg-gray-900 shadow-2xl transition-transform duration-300 ease-out ${sideClasses[side]}`}
+        style={{ transform: slideTransform[side] }}
+      >
+        {title && (
+          <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
+            <h2 id={titleId} className="text-lg font-semibold dark:text-gray-100">{title}</h2>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Close drawer"
+            >
+              <svg className="w-5 h-5 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+        <div className="overflow-y-auto p-4 dark:text-gray-300">{children}</div>
+      </div>
+    </>
+  );
+}
+```
+
+> **Note:** Uses `translateX`/`translateY` transforms instead of CSS `@starting-style` because drawers need the backdrop to fade simultaneously with the slide animation. For a pure-CSS approach without JS-driven transforms, see Part A Module 3.2 `@starting-style` patterns applied to the `[popover]` element.
+
+## 4.24 Avatar / AvatarGroup
+
+User identity representation with fallback states, status indicators, and overflow handling for group displays.
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+export interface AvatarProps {
+  src?: string;
+  alt?: string;
+  name?: string;
+  size?: 'sm' | 'md' | 'lg';
+  status?: 'online' | 'offline' | 'busy' | 'away';
+  ref?: React.Ref<HTMLDivElement>;
+}
+
+function Avatar({ src, alt, name, size = 'md', status, ref }: AvatarProps) {
+  const [imgError, setImgError] = useState(false);
+  const sizeClasses = { sm: 'w-8 h-8 text-xs', md: 'w-10 h-10 text-sm', lg: 'w-14 h-14 text-base' };
+  const statusColors = { online: 'bg-green-500', offline: 'bg-gray-400', busy: 'bg-red-500', away: 'bg-amber-500' };
+  const statusSizes = { sm: 'w-2 h-2', md: 'w-2.5 h-2.5', lg: 'w-3.5 h-3.5' };
+
+  // Generate initials from name
+  const initials = name
+    ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+    : '?';
+
+  return (
+    <div ref={ref} className="relative inline-flex shrink-0">
+      {src && !imgError ? (
+        <img
+          src={src}
+          alt={alt || `Avatar of ${name || 'user'}`}
+          onError={() => setImgError(true)}
+          className={`${sizeClasses[size]} rounded-full object-cover bg-gray-200 dark:bg-gray-700`}
+        />
+      ) : (
+        <div
+          className={`${sizeClasses[size]} rounded-full flex items-center justify-center font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light`}
+          role="img"
+          aria-label={name ? `Avatar of ${name}` : 'User avatar'}
+        >
+          {initials}
+        </div>
+      )}
+      {status && (
+        <span
+          className={`absolute bottom-0 right-0 block ${statusSizes[size]} ${statusColors[status]} rounded-full ring-2 ring-white dark:ring-gray-900`}
+          aria-label={`Status: ${status}`}
+        />
+      )}
+    </div>
+  );
+}
+
+export interface AvatarGroupProps {
+  avatars: Array<{ src?: string; alt?: string; name?: string }>;
+  max?: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+function AvatarGroup({ avatars, max = 4, size = 'md' }: AvatarGroupProps) {
+  const visible = avatars.slice(0, max);
+  const remaining = avatars.length - max;
+
+  return (
+    <div className="flex -space-x-2" aria-label={`${avatars.length} users`}>
+      {visible.map((avatar, i) => (
+        <div key={i} className="ring-2 ring-white dark:ring-gray-900 rounded-full">
+          <Avatar {...avatar} size={size} />
+        </div>
+      ))}
+      {remaining > 0 && (
+        <div
+          className={`${size === 'sm' ? 'w-8 h-8 text-xs' : size === 'lg' ? 'w-14 h-14 text-base' : 'w-10 h-10 text-sm'} rounded-full flex items-center justify-center font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 ring-2 ring-white dark:ring-gray-900`}
+          aria-label={`${remaining} more users`}
+        >
+          +{remaining}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## 4.25 Command Palette
+
+A keyboard-driven search-and-execute interface pattern. Activated via keyboard shortcut (Cmd+K / Ctrl+K). Uses `useDeferredValue` for responsive filtering.
+
+```tsx
+'use client';
+
+import { useState, useEffect, useCallback, useRef, useDeferredValue, useId } from 'react';
+
+export interface CommandItem {
+  id: string;
+  label: string;
+  shortcut?: string;
+  icon?: React.ReactNode;
+  onSelect: () => void;
+  group?: string;
+}
+
+export interface CommandPaletteProps {
+  isOpen: boolean;
+  onClose: () => void;
+  items: CommandItem[];
+  placeholder?: string;
+}
+
+function CommandPalette({ isOpen, onClose, items, placeholder = 'Type a command...' }: CommandPaletteProps) {
+  const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listId = useId();
+
+  // Filter items by query
+  const filteredItems = deferredQuery
+    ? items.filter(item =>
+        item.label.toLowerCase().includes(deferredQuery.toLowerCase())
+      )
+    : items;
+
+  // Group filtered items
+  const groups = filteredItems.reduce<Record<string, CommandItem[]>>((acc, item) => {
+    const group = item.group || 'Commands';
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(item);
+    return acc;
+  }, {});
+
+  // Reset state on open/close
+  useEffect(() => {
+    if (isOpen) {
+      setQuery('');
+      setActiveIndex(0);
+      // Slight delay to ensure dialog is rendered
+      requestAnimationFrame(() => inputRef.current?.focus());
+    }
+  }, [isOpen]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setActiveIndex(prev => Math.min(prev + 1, filteredItems.length - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setActiveIndex(prev => Math.max(prev - 1, 0));
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (filteredItems[activeIndex]) {
+          filteredItems[activeIndex].onSelect();
+          onClose();
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        onClose();
+        break;
+    }
+  }, [filteredItems, activeIndex, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="fixed inset-0 z-[var(--z-overlay)] bg-black/50 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Command palette"
+        className="fixed top-[20%] left-1/2 -translate-x-1/2 z-[var(--z-modal)] w-full max-w-lg rounded-xl border border-gray-200 bg-white shadow-2xl dark:bg-gray-900 dark:border-gray-700 overflow-hidden"
+        onKeyDown={handleKeyDown}
+      >
+        <div className="flex items-center gap-2 px-4 border-b dark:border-gray-700">
+          <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setActiveIndex(0); }}
+            placeholder={placeholder}
+            className="flex-1 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 text-sm dark:text-gray-100 dark:placeholder-gray-500"
+            aria-controls={listId}
+            aria-activedescendant={activeIndex >= 0 ? `${listId}-${filteredItems[activeIndex]?.id}` : undefined}
+            aria-label="Search commands"
+          />
+          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 text-xs text-gray-400 bg-gray-100 rounded dark:bg-gray-800 dark:text-gray-500">ESC</kbd>
+        </div>
+        <ul
+          id={listId}
+          role="listbox"
+          className="max-h-72 overflow-y-auto py-2"
+          aria-label="Command results"
+        >
+          {filteredItems.length === 0 && (
+            <li className="px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">No results found</li>
+          )}
+          {Object.entries(groups).map(([group, items]) => (
+            <li key={group} role="group" aria-label={group}>
+              <div className="px-4 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{group}</div>
+              {items.map((item) => {
+                const globalIndex = filteredItems.indexOf(item);
+                return (
+                  <div
+                    key={item.id}
+                    id={`${listId}-${item.id}`}
+                    role="option"
+                    aria-selected={globalIndex === activeIndex}
+                    className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm transition-colors ${
+                      globalIndex === activeIndex
+                        ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light'
+                        : 'text-gray-700 dark:text-gray-300'
+                    }`}
+                    onClick={() => { item.onSelect(); onClose(); }}
+                    onMouseEnter={() => setActiveIndex(globalIndex)}
+                  >
+                    {item.icon && <span className="shrink-0" aria-hidden="true">{item.icon}</span>}
+                    <span className="flex-1 truncate">{item.label}</span>
+                    {item.shortcut && (
+                      <kbd className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">{item.shortcut}</kbd>
+                    )}
+                  </div>
+                );
+              })}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
+// Global keyboard shortcut hook
+function useCommandPalette() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsOpen(prev => !prev);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  return { isOpen, open: () => setIsOpen(true), close: () => setIsOpen(false), toggle: () => setIsOpen(prev => !prev) };
+}
+```
+
+## 4.26 Additional Component References
 
 | Component | Key Features | Full Implementation |
 |-----------|-------------|---------------------|
 | Toast/Notification | aria-live, CSS progress animation, stacking, deterministic ID | 4.15 Toast |
-| Navigation Bar | skip link, keyboard nav, mobile hamburger | 4.16 Navbar |
-| Breadcrumb | aria-label, structured data, current page | 4.17 Breadcrumb |
+| Navigation Bar | skip link, keyboard nav, mobile hamburger with aria-expanded | 4.16 Navbar |
+| Breadcrumb | aria-label, structured data (Schema.org), current page | 4.17 Breadcrumb |
 | Tooltip | anchor positioning, delay show/hide, keyboard trigger, cleanup | 4.18 Tooltip |
 | Password Input | visibility toggle, strength indicator, aria-live | 4.19 PasswordInput |
 | Radio Group | arrow key nav, aria-checked, descriptions, no redundant ARIA | 4.20 RadioGroup |
-| Data Table | sortable, scope/caption, content-visibility, useMemo | 4.21 DataTable |
+| Data Table | sortable, scope="col"/"row", caption, content-visibility, useMemo | 4.21 DataTable |
 | Pagination | aria-current, ellipsis, Previous/Next | 4.22 Pagination |
 | Dropdown Menu | roving tabindex, type-ahead, Escape to close | 4.11 Select pattern |
+| Drawer/Sheet | edge-anchored, aria-modal, body scroll lock, Escape close | 4.23 Drawer |
+| Avatar/AvatarGroup | image fallback, initials, status indicator, overflow | 4.24 Avatar |
+| Command Palette | Cmd+K shortcut, useDeferredValue, grouped results, keyboard nav | 4.25 CommandPalette |
 
 ---
 
@@ -3010,7 +3266,7 @@ The five UI/UX skills form a composable "operating system" for design and implem
 ```
 1. UI/UX Pro Max Module 1 → Creative brief, style selection
 2. UI/UX Pro Max Module 2 → Design tokens, OKLCH palettes
-3. Part C data lookup → Font pairing, industry rules
+3. UI/UX Pro Max Module 7 → Font pairing, industry rules
 4. GSAP Animations → Timeline choreography, ScrollTrigger setup
 5. Motion System Playbook → Library selection (GSAP for scroll, CSS for hovers)
 6. React Best Practices → Server Components for static sections, client for interactive
@@ -3022,7 +3278,7 @@ The five UI/UX skills form a composable "operating system" for design and implem
 
 ```
 1. UI/UX Pro Max Module 1 → Creative brief (AI platform)
-2. Part C data lookup → AI-Native UI style, purple/blue palette
+2. UI/UX Pro Max Module 7 → AI-Native UI style, purple/blue palette
 3. UI/UX Pro Max Module 4 → Thinking indicator, Chat composer, Uncertainty notice
 4. React Best Practices → Streaming with Suspense, SWR for message dedup
 5. Web Design Guidelines → aria-live for message announcements
@@ -3034,7 +3290,7 @@ The five UI/UX skills form a composable "operating system" for design and implem
 
 ```
 1. UI/UX Pro Max Module 1 → Creative brief (fintech/enterprise)
-2. Part C data lookup → Data-Dense Dashboard style, banking palette
+2. UI/UX Pro Max Module 7 → Data-Dense Dashboard style, banking palette
 3. UI/UX Pro Max Module 3 → Container queries for responsive panels
 4. React Best Practices → RSC for data fetching, memo for chart components
 5. Web Design Guidelines → Form accessibility, ARIA for data tables
@@ -3093,23 +3349,30 @@ When two skills give conflicting advice, resolve using this hierarchy:
 This skill bundles data accessible via Python scripts:
 
 ```bash
+# Design system generation
+python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system -p "Project Name"
+
 # Domain-specific searches
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain <domain> --query "<keyword>" --format json
+python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain>
 
 # Stack-specific guidelines
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain stack:<stack> --query "<keyword>" --format json
-
-# List all available domains
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --list-domains
+python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack <stack>
 
 # Persistence
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py "<query>" --design-system --persist -p "Project"
-python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py "<query>" --design-system --persist -p "Project" --page "dashboard"
+python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project"
+python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project" --page "dashboard"
 ```
 
-Available domains: product, style, color, typography, reasoning, ux, chart, icon, web, performance, landing, stack:nextjs, stack:react, stack:vue, stack:svelte, stack:astro, stack:shadcn, stack:html-tailwind, stack:nuxtjs, stack:nuxt-ui, stack:react-native, stack:flutter, stack:swiftui, stack:jetpack-compose
+Available domains: product, style, color, landing, typography, chart, ux, icons, react, web
 
-Data files location: `skills/ui-ux-pro-max-v8-data/data/`
+Available stacks: html-tailwind, react, nextjs, vue, nuxtjs, nuxt-ui, svelte, astro, swiftui, react-native, flutter, shadcn, jetpack-compose
+
+Data files location: `skills/ui-ux-pro-max/data/`
+- styles.csv (67 entries), colors.csv (96 palettes), typography.csv (57 pairings)
+- products.csv, landing.csv, charts.csv, icons.csv
+- ux-guidelines.csv, react-performance.csv, web-interface.csv
+- ui-reasoning.csv (100 reasoning rules)
+- stacks/*.csv (13 stack-specific guideline files)
 
 ---
 
@@ -3362,12 +3625,12 @@ function LikeButton({ initialLiked, initialCount, onToggle }: {
     <button
       onClick={handleToggle}
       aria-pressed={optimisticState.liked}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors"
     >
-      <svg className={`w-5 h-5 ${optimisticState.liked ? 'text-red-500 fill-current dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`} viewBox="0 0 20 20" aria-hidden="true">
+      <svg className={`w-5 h-5 ${optimisticState.liked ? 'text-red-500 fill-current' : 'text-gray-400'}`} viewBox="0 0 20 20" aria-hidden="true">
         <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
       </svg>
-      <span className="text-sm dark:text-gray-100">{optimisticState.count}</span>
+      <span className="text-sm">{optimisticState.count}</span>
     </button>
   );
 }

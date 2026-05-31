@@ -32,49 +32,21 @@ Activate this skill when the query involves:
 **Do NOT activate** for: generating new designs from scratch, writing component
 code (use Part B), or understanding design system philosophy (use Part A).
 
-## Quick Theory Reference
-
-Essential design rules for applying data lookups correctly. For full theory, see Part A (ui-ux-pro-max-v8-infra).
-
-### Typography Rules
-- **Reading line:** Body text max-width 65-75ch. Headings may exceed but must re-wrap.
-- **Line height:** Body 1.5-1.625. Headings 1.1-1.25. Tight for impact, relaxed for reading.
-- **Font weight:** 400 for body, 600 for subheadings, 700 for headings. Never go below 300.
-- **Letter-spacing:** -0.01em for large headings, 0.01em for body. Never track body text loose.
-- **Measure:** Paragraphs >75ch strain the eye. Break into columns or add margins.
-
-### Color Rules
-- **Muted foundations:** Start desaturated (OKLCH chroma <0.05). Reserve high-chroma for interactive/status.
-- **Dark mode:** Never pure black (#000). Use oklch(0.12-0.18). Reduce chroma 10-20%. Text never pure white — use oklch(0.87-0.92).
-- **Contrast:** Body text WCAG 4.5:1 minimum. Large text 3:1. UI components 3:1. Use APCA for future-proofing.
-- **Palette rule:** 1 primary, 1 secondary, 1 CTA, 1 background, 1 text, 1 border. Maximum 3 accent colors.
-
-### Spacing Rules
-- **8-point grid:** All spacing multiples of 4px. Prefer 8px increments.
-- **Component padding:** Minimum 12px (3 units). Comfortable 16px (4 units).
-- **Touch targets:** Minimum 44x44px. Comfortable 48x48px.
-- **Gap between sections:** 64px (16 units) minimum. 96px (24 units) for major breaks.
-
-### Motion Rules
-- **Micro-interactions:** 150-300ms. Easing: ease-out.
-- **Page transitions:** 300-500ms. Easing: ease-in-out.
-- **Always check:** `prefers-reduced-motion: reduce` → disable or simplify animations.
-
 ## Data Inventory
 
 | Domain | File | Records | Description |
 |--------|------|---------|-------------|
 | `color` | `data/colors.csv` | 96 | Color palettes per product type/industry |
 | `style` | `data/styles.csv` | 67 | UI style specifications (22 columns) |
-| `typography` | `data/typography.csv` | 57 | Font pairing recommendations |
-| `ux` | `data/ux-guidelines.csv` | 99 | UX do/don't guidelines |
+| `typography` | `data/typography.csv` | 56 | Font pairing recommendations |
+| `ux` | `data/ux-guidelines.csv` | 98 | UX do/don't guidelines |
 | `chart` | `data/charts.csv` | 25 | Chart type recommendations |
 | `icon` | `data/icons.csv` | 100 | Lucide icon mappings |
 | `reasoning` | `data/ui-reasoning.csv` | 100 | Product → UI pattern reasoning engine |
 | `web` | `data/web-interface.csv` | 30 | Web interface guidelines (React/Next.js) |
 | `performance` | `data/react-performance.csv` | 44 | React/Next.js performance patterns |
-| `landing` | `data/landing.csv` | 27 | Landing page pattern specs |
-| `product` | `data/products.csv` | 96 | Product type → style/pattern mapping |
+| `landing` | `data/landing.csv` | 30 | Landing page pattern specs |
+| `product` | `data/products.csv` | 95 | Product type → style/pattern mapping |
 | `stack:astro` | `data/stacks/astro.csv` | 53 | Astro framework best practices |
 | `stack:flutter` | `data/stacks/flutter.csv` | 52 | Flutter framework best practices |
 | `stack:html-tailwind` | `data/stacks/html-tailwind.csv` | 55 | HTML + Tailwind CSS best practices |
@@ -89,7 +61,7 @@ Essential design rules for applying data lookups correctly. For full theory, see
 | `stack:swiftui` | `data/stacks/swiftui.csv` | 50 | SwiftUI best practices |
 | `stack:vue` | `data/stacks/vue.csv` | 49 | Vue.js best practices |
 
-**Total: 24 data files, 1,322 records across 11 core domains + 13 framework stacks.**
+**Total: 24 data files, 1,321 records across 11 core domains + 13 framework stacks.**
 
 ## Lookup Script Usage
 
@@ -189,8 +161,8 @@ Short aliases are supported for convenience:
 | Effects & Animation | string | Animation/effect specifications |
 | Best For | string | Recommended use cases |
 | Do Not Use For | string | Inappropriate use cases |
-| Light Mode ✓ | string | Light mode compatibility |
-| Dark Mode ✓ | string | Dark mode compatibility |
+| Light Mode | string | Light mode compatibility |
+| Dark Mode | string | Dark mode compatibility |
 | Performance | string | Performance impact rating |
 | Accessibility | string | Accessibility compliance level |
 | Mobile-Friendly | string | Mobile compatibility rating |
@@ -203,7 +175,7 @@ Short aliases are supported for convenience:
 | Implementation Checklist | string | Checklist items |
 | Design System Variables | string | CSS custom property definitions |
 
-### typography.csv (57 records)
+### typography.csv (56 records)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -219,7 +191,7 @@ Short aliases are supported for convenience:
 | Tailwind Config | string | Tailwind CSS fontFamily config |
 | Notes | string | Usage notes |
 
-### ux-guidelines.csv (99 records)
+### ux-guidelines.csv (98 records)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -249,7 +221,7 @@ Short aliases are supported for convenience:
 | Anti_Patterns | string | What to avoid |
 | Severity | string | Priority level (HIGH/MEDIUM) |
 
-### products.csv (96 records)
+### products.csv (95 records)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -262,19 +234,6 @@ Short aliases are supported for convenience:
 | Dashboard Style | string | Dashboard pattern (if applicable) |
 | Color Palette Focus | string | Color palette direction |
 | Key Considerations | string | Important design considerations |
-
-### landing.csv (27 records)
-
-| Column | Type | Description |
-|--------|------|-------------|
-| No | int | Row index |
-| Pattern Name | string | Landing page pattern name |
-| Keywords | string | Search keywords |
-| Section Order | string | Recommended section sequence |
-| Primary CTA Placement | string | Where to place the main CTA |
-| Color Strategy | string | Color scheme recommendations |
-| Recommended Effects | string | Animation and effect suggestions |
-| Conversion Optimization | string | Conversion-focused tips |
 
 ### Stack CSV files (13 frameworks, 49–60 records each)
 
