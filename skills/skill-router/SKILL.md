@@ -19,7 +19,7 @@ Read the user's request and classify it into one of 8 intent domains:
 | BUILD | "build", "create", "make", "develop", "ship", "launch" | Product Launch |
 | WRITE | "write", "content", "blog", "article", "copy", "email" | Content Machine |
 | RESEARCH | "research", "investigate", "find out", "analyze", "what is" | Research Pipeline |
-| DESIGN | "design", "mockup", "UI", "interface", "prototype" | Design & Deliver |
+| DESIGN | "design", "mockup", "UI", "interface", "prototype", "palette", "color", "theme", "dark mode" | Design & Deliver |
 | DECIDE | "should we", "which option", "compare", "decide", "evaluate" | Reasoning Stack |
 | DATA | "data", "spreadsheet", "chart", "financial", "report" | Data Pipeline |
 | LEARN | "explain", "teach", "how does", "understand", "learn" | Education Stack |
@@ -67,7 +67,35 @@ Example:
 User: "I need help with my website"
 Router: "Which of these? ① Build a new site (BUILD) ② Fix/design an existing one (DESIGN) ③ Write content for it (WRITE)"
 
-### Step 5: Single-Skill Fast Path
+### Step 5: UI/UX PRO MAX v8 Sub-Routing
+
+When the DESIGN intent triggers `ui-ux-pro-max`-related queries, route to the correct v8 part based on query sub-intent:
+
+| Query Pattern | Sub-Intent | Activate |
+|---|---|---|
+| "pick a color palette", "choose fonts", "design tokens", "CSS primitives", "dark mode theme", "OKLCH", "spacing scale" | Design & Style | `ui-ux-pro-max-v8-infra` |
+| "build a modal", "implement accordion", "React component", "a11y fix", "GSAP animation", "form validation", "keyboard nav" | Build & Code | `ui-ux-pro-max-v8-components` |
+| "palette for fintech", "font pairing for luxury", "style specs for glassmorphism", "UX rules for animation" | Data Lookup | `ui-ux-pro-max-v8-data` |
+| "design AND build a dashboard" | Full Stack | `ui-ux-pro-max-v8-infra` → `ui-ux-pro-max-v8-components` (chain) |
+| "what palette for SaaS AND build the components" | Full Stack | `ui-ux-pro-max-v8-data` → `ui-ux-pro-max-v8-components` (chain) |
+
+**Decision Tree:**
+```
+Is this a UI/UX design query?
+│
+├─► YES: What's the sub-intent?
+│   │
+│   ├─► Design foundations (tokens, CSS, themes)? → ui-ux-pro-max-v8-infra
+│   ├─► Component implementation (React, a11y)? → ui-ux-pro-max-v8-components
+│   ├─► Specific data lookup (palette, font)? → ui-ux-pro-max-v8-data
+│   └─► Both design + build? → ui-ux-pro-max-v8-infra → ui-ux-pro-max-v8-components
+│
+└─► NO: Route to other skill stacks
+```
+
+**Key Rule**: Only load the part(s) needed. A query about "dark mode tokens" should NOT load the component library. A query about "build a modal" should NOT load the full palette data.
+
+### Step 6: Single-Skill Fast Path
 
 Not every request needs a stack. For simple, focused tasks:
 - "Generate an image" → image-generation (no stack)
@@ -77,7 +105,7 @@ Not every request needs a stack. For simple, focused tasks:
 
 Rule: If the request has ONE verb and ONE output type, use single-skill fast path.
 
-### Step 6: Execute and Monitor
+### Step 7: Execute and Monitor
 
 Once the stack is selected:
 1. Execute skills in chain order
