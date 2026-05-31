@@ -3,14 +3,10 @@ name: ui-ux-pro-max-components
 description: >
   UI/UX Pro Max v8.0 — Components, Patterns & Validation. Use this file when the query is about
   React components, accessibility (a11y), motion presets, validation/audit, advanced patterns,
-  or creative brief workflows. Contains Module 1 (Creative Brief Engine), Module 4 (Component Library
-  with 25+ components: Accordion, Tabs, Modal/Dialog, Skeleton, SkipLink, FocusTrap, ScreenReader,
-  CursorFollower, AI Patterns, ImageReveal, Select, Checkbox/Switch, Textarea, Form, Toast, Navbar,
-  Breadcrumb, Tooltip, PasswordInput, RadioGroup, DataTable, Pagination, Drawer/Sheet, Avatar,
-  CommandPalette), Module 5 (Motion Presets — 12 CSS + 12 GSAP), Module 6 (Validation & Audit),
-  Module 8 (Cross-Reference Integration), Module 10 (Advanced Patterns: ErrorBoundary, DataState,
-  IntersectionObserver, ContainerQuery, CSS Nesting). For design tokens, CSS primitives, data tables,
-  and theming, see PART-A-INFRASTRUCTURE.md.
+  or creative brief workflows. Contains Module 1 (Creative Brief Engine), Module 4 (Component Library),
+  Module 5 (Motion Presets), Module 6 (Validation & Audit), Module 8 (Cross-Reference Integration),
+  and Module 10 (Advanced Patterns). For design tokens, CSS primitives, data tables, and theming,
+  see PART-A-INFRASTRUCTURE.md.
 version: "8.0.0"
 ---
 
@@ -1307,6 +1303,7 @@ function Textarea({
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useId } from 'react';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -1324,6 +1321,11 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
     resolver: zodResolver(contactSchema),
   });
 
+  const formId = useId();
+  const nameErrorId = `${formId}-name-error`;
+  const emailErrorId = `${formId}-email-error`;
+  const messageErrorId = `${formId}-message-error`;
+
   const handleFormSubmit = async (data: ContactForm) => {
     await onSubmit(data);
     reset();
@@ -1338,14 +1340,14 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
         <input
           type="text"
           aria-invalid={!!errors.name}
-          aria-describedby={errors.name ? 'name-error' : undefined}
+          aria-describedby={errors.name ? nameErrorId : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('name')}
         />
-        {errors.name && <p id="name-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
+        {errors.name && <p id={nameErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -1355,14 +1357,14 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
         <input
           type="email"
           aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? 'email-error' : undefined}
+          aria-describedby={errors.email ? emailErrorId : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('email')}
         />
-        {errors.email && <p id="email-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>}
+        {errors.email && <p id={emailErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>}
       </div>
 
       <div>
@@ -1372,14 +1374,14 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
         <textarea
           rows={4}
           aria-invalid={!!errors.message}
-          aria-describedby={errors.message ? 'message-error' : undefined}
+          aria-describedby={errors.message ? messageErrorId : undefined}
           aria-required="true"
           className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:bg-gray-800 dark:text-gray-100 ${
             errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           {...register('message')}
         />
-        {errors.message && <p id="message-error" role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>}
+        {errors.message && <p id={messageErrorId} role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>}
       </div>
 
       <div className="flex items-center gap-2">
@@ -1399,7 +1401,7 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
 }
 ```
 
-> **Fix:** Removed hard-coded `id="name"`, `id="email"`, `id="message"` from form inputs. React Hook Form's `register()` manages IDs internally when combined with `useId()`. Hard-coded IDs cause duplicates when multiple form instances are rendered. Error `<p>` elements use stable IDs (`name-error`, `email-error`, `message-error`) that are unique within each form instance.
+> **Fix:** Error IDs now use `useId()` prefix (`${formId}-name-error`, etc.) to guarantee uniqueness across multiple form instances on the same page. Previously hardcoded IDs (`name-error`, `email-error`, `message-error`) would duplicate when rendering multiple forms.
 
 ## 4.15 Toast with CSS Progress Animation
 
@@ -1895,7 +1897,6 @@ function RadioGroup({ options, value, onChange, label, error }: RadioGroupProps)
     <fieldset>
       <legend className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</legend>
       <div
-        aria-label={label}
         onKeyDown={handleKeyDown}
         className="mt-2 space-y-2"
       >
@@ -2024,12 +2025,8 @@ function DataTable<T extends Record<string, unknown>>({
               onClick={() => onRowClick?.(row)}
               style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}
             >
-              {columns.map((col, colIndex) => (
-                <td
-                  key={String(col.key)}
-                  scope={colIndex === 0 ? 'row' : undefined}
-                  className="px-4 py-3 dark:text-gray-300"
-                >
+              {columns.map((col) => (
+                <td key={String(col.key)} className="px-4 py-3 dark:text-gray-300">
                   {col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '')}
                 </td>
               ))}
@@ -2117,183 +2114,186 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
 
 ## 4.23 Drawer / Sheet
 
-A slide-in panel component anchored to any screen edge. Distinct from Modal in its edge-anchored positioning and gesture-like feel. Uses the native Popover API for backdrop behavior with `interpolate-size` for smooth height transitions.
+A slide-in panel anchored to the edge of the viewport. Uses the native `<dialog>` element for built-in focus management and backdrop, combined with CSS `@starting-style` for entry/exit animation.
 
 ```tsx
 'use client';
 
-import { useState, useCallback, useEffect, useId } from 'react';
+import { useRef, useEffect, useCallback, useId } from 'react';
 
 export interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  side?: 'left' | 'right' | 'top' | 'bottom';
-  title?: string;
+  title: string;
+  description?: string;
   children: React.ReactNode;
-  ref?: React.Ref<HTMLDivElement>;
+  side?: 'left' | 'right' | 'top' | 'bottom';
+  ref?: React.Ref<HTMLDialogElement>;
 }
 
-function Drawer({ isOpen, onClose, side = 'right', title, children, ref }: DrawerProps) {
+function Drawer({ isOpen, onClose, title, description, children, side = 'right', ref }: DrawerProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const setDialogRef = useCallback((node: HTMLDialogElement | null) => {
+    (dialogRef as React.MutableRefObject<HTMLDialogElement | null>).current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) (ref as React.MutableRefObject<HTMLDialogElement | null>).current = node;
+  }, [ref]);
+
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
+  const descId = useId();
 
-  // Close on Escape
   useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  // Prevent body scroll when open
-  useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = ''; };
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      dialog.showModal();
+    } else {
+      if (dialog.open) {
+        dialog.close();
+      }
+      previousFocusRef.current?.focus();
     }
   }, [isOpen]);
 
-  const sideClasses = {
-    left: 'inset-y-0 left-0 h-full w-80 max-w-[85vw]',
-    right: 'inset-y-0 right-0 h-full w-80 max-w-[85vw]',
-    top: 'inset-x-0 top-0 h-auto max-h-[85vh]',
-    bottom: 'inset-x-0 bottom-0 h-auto max-h-[85vh]',
-  };
+  // Focus trap (same pattern as Modal)
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      onClose();
+      return;
+    }
 
-  const slideTransform = {
-    left: isOpen ? 'translateX(0)' : 'translateX(-100%)',
-    right: isOpen ? 'translateX(0)' : 'translateX(100%)',
-    top: isOpen ? 'translateY(0)' : 'translateY(-100%)',
-    bottom: isOpen ? 'translateY(0)' : 'translateY(100%)',
+    if (e.key !== 'Tab') return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusable = dialog.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last?.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first?.focus();
+    }
+  }, [onClose]);
+
+  const sideClasses = {
+    right: 'right-0 top-0 bottom-0 w-full max-w-md translate-x-full data-[open]:translate-x-0',
+    left: 'left-0 top-0 bottom-0 w-full max-w-md -translate-x-full data-[open]:translate-x-0',
+    top: 'top-0 left-0 right-0 h-full max-h-md translate-y-full data-[open]:translate-y-0',
+    bottom: 'bottom-0 left-0 right-0 h-full max-h-md -translate-y-full data-[open]:translate-y-0',
   };
 
   return (
-    <>
-      {/* Backdrop */}
+    <dialog
+      ref={setDialogRef}
+      onClose={onClose}
+      onKeyDown={handleKeyDown}
+      aria-labelledby={titleId}
+      aria-describedby={description ? descId : undefined}
+      className="m-0 p-0 bg-transparent backdrop:bg-black/50 backdrop:backdrop-blur-sm overflow-visible"
+    >
       <div
-        className={`fixed inset-0 z-[var(--z-overlay)] bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      {/* Panel */}
-      <div
-        ref={ref}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        className={`fixed z-[var(--z-modal)] bg-white dark:bg-gray-900 shadow-2xl transition-transform duration-300 ease-out ${sideClasses[side]}`}
-        style={{ transform: slideTransform[side] }}
+        className={`fixed ${sideClasses[side]} bg-white dark:bg-gray-900 shadow-2xl flex flex-col transition-transform duration-300 ease-out`}
       >
-        {title && (
-          <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <div>
             <h2 id={titleId} className="text-lg font-semibold dark:text-gray-100">{title}</h2>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Close drawer"
-            >
-              <svg className="w-5 h-5 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            {description && (
+              <p id={descId} className="text-sm text-gray-500 dark:text-gray-400 mt-1">{description}</p>
+            )}
           </div>
-        )}
-        <div className="overflow-y-auto p-4 dark:text-gray-300">{children}</div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-300 transition-colors"
+            aria-label="Close drawer"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4 dark:text-gray-300">
+          {children}
+        </div>
       </div>
-    </>
+    </dialog>
   );
 }
 ```
 
-> **Note:** Uses `translateX`/`translateY` transforms instead of CSS `@starting-style` because drawers need the backdrop to fade simultaneously with the slide animation. For a pure-CSS approach without JS-driven transforms, see Part A Module 3.2 `@starting-style` patterns applied to the `[popover]` element.
+## 4.24 Avatar
 
-## 4.24 Avatar / AvatarGroup
-
-User identity representation with fallback states, status indicators, and overflow handling for group displays.
+Display user profile images with fallback initials. Supports multiple sizes and a status indicator.
 
 ```tsx
-'use client';
-
-import { useState } from 'react';
-
 export interface AvatarProps {
   src?: string;
   alt?: string;
   name?: string;
-  size?: 'sm' | 'md' | 'lg';
-  status?: 'online' | 'offline' | 'busy' | 'away';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  status?: 'online' | 'offline' | 'away' | 'busy';
   ref?: React.Ref<HTMLDivElement>;
 }
 
 function Avatar({ src, alt, name, size = 'md', status, ref }: AvatarProps) {
-  const [imgError, setImgError] = useState(false);
-  const sizeClasses = { sm: 'w-8 h-8 text-xs', md: 'w-10 h-10 text-sm', lg: 'w-14 h-14 text-base' };
-  const statusColors = { online: 'bg-green-500', offline: 'bg-gray-400', busy: 'bg-red-500', away: 'bg-amber-500' };
-  const statusSizes = { sm: 'w-2 h-2', md: 'w-2.5 h-2.5', lg: 'w-3.5 h-3.5' };
+  const sizeClasses = {
+    sm: 'w-8 h-8 text-xs',
+    md: 'w-10 h-10 text-sm',
+    lg: 'w-12 h-12 text-base',
+    xl: 'w-16 h-16 text-lg',
+  };
 
-  // Generate initials from name
+  const statusSizeClasses = {
+    sm: 'w-2 h-2',
+    md: 'w-2.5 h-2.5',
+    lg: 'w-3 h-3',
+    xl: 'w-4 h-4',
+  };
+
+  const statusColors = {
+    online: 'bg-green-500',
+    offline: 'bg-gray-400 dark:bg-gray-500',
+    away: 'bg-amber-500',
+    busy: 'bg-red-500',
+  };
+
+  // Generate initials from name (max 2 characters)
   const initials = name
     ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
     : '?';
 
   return (
-    <div ref={ref} className="relative inline-flex shrink-0">
-      {src && !imgError ? (
+    <div ref={ref} className="relative inline-flex" role="img" aria-label={alt || name || 'User avatar'}>
+      {src ? (
         <img
           src={src}
-          alt={alt || `Avatar of ${name || 'user'}`}
-          onError={() => setImgError(true)}
-          className={`${sizeClasses[size]} rounded-full object-cover bg-gray-200 dark:bg-gray-700`}
+          alt={alt || name || 'User avatar'}
+          className={`${sizeClasses[size]} rounded-full object-cover ring-2 ring-white dark:ring-gray-800`}
         />
       ) : (
         <div
-          className={`${sizeClasses[size]} rounded-full flex items-center justify-center font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light`}
-          role="img"
-          aria-label={name ? `Avatar of ${name}` : 'User avatar'}
+          className={`${sizeClasses[size]} rounded-full flex items-center justify-center font-medium bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 ring-2 ring-white dark:ring-gray-800`}
+          aria-hidden="true"
         >
           {initials}
         </div>
       )}
       {status && (
         <span
-          className={`absolute bottom-0 right-0 block ${statusSizes[size]} ${statusColors[status]} rounded-full ring-2 ring-white dark:ring-gray-900`}
+          className={`absolute bottom-0 right-0 ${statusSizeClasses[size]} ${statusColors[status]} rounded-full ring-2 ring-white dark:ring-gray-800`}
           aria-label={`Status: ${status}`}
-        />
-      )}
-    </div>
-  );
-}
-
-export interface AvatarGroupProps {
-  avatars: Array<{ src?: string; alt?: string; name?: string }>;
-  max?: number;
-  size?: 'sm' | 'md' | 'lg';
-}
-
-function AvatarGroup({ avatars, max = 4, size = 'md' }: AvatarGroupProps) {
-  const visible = avatars.slice(0, max);
-  const remaining = avatars.length - max;
-
-  return (
-    <div className="flex -space-x-2" aria-label={`${avatars.length} users`}>
-      {visible.map((avatar, i) => (
-        <div key={i} className="ring-2 ring-white dark:ring-gray-900 rounded-full">
-          <Avatar {...avatar} size={size} />
-        </div>
-      ))}
-      {remaining > 0 && (
-        <div
-          className={`${size === 'sm' ? 'w-8 h-8 text-xs' : size === 'lg' ? 'w-14 h-14 text-base' : 'w-10 h-10 text-sm'} rounded-full flex items-center justify-center font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 ring-2 ring-white dark:ring-gray-900`}
-          aria-label={`${remaining} more users`}
         >
-          +{remaining}
-        </div>
+          <span className="sr-only">{status}</span>
+        </span>
       )}
     </div>
   );
@@ -2302,66 +2302,66 @@ function AvatarGroup({ avatars, max = 4, size = 'md' }: AvatarGroupProps) {
 
 ## 4.25 Command Palette
 
-A keyboard-driven search-and-execute interface pattern. Activated via keyboard shortcut (Cmd+K / Ctrl+K). Uses `useDeferredValue` for responsive filtering.
+A keyboard-activated search-and-execute palette (Cmd+K / Ctrl+K). Follows the WAI-ARIA combobox pattern with a filtered list of commands.
 
 ```tsx
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useDeferredValue, useId } from 'react';
+import { useState, useRef, useCallback, useEffect, useId } from 'react';
 
 export interface CommandItem {
   id: string;
   label: string;
-  shortcut?: string;
   icon?: React.ReactNode;
+  shortcut?: string;
   onSelect: () => void;
-  group?: string;
+  category?: string;
 }
 
 export interface CommandPaletteProps {
-  isOpen: boolean;
-  onClose: () => void;
-  items: CommandItem[];
+  commands: CommandItem[];
   placeholder?: string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-function CommandPalette({ isOpen, onClose, items, placeholder = 'Type a command...' }: CommandPaletteProps) {
+function CommandPalette({ commands, placeholder = 'Type a command...', ref }: CommandPaletteProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const deferredQuery = useDeferredValue(query);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listId = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const paletteId = useId();
 
-  // Filter items by query
-  const filteredItems = deferredQuery
-    ? items.filter(item =>
-        item.label.toLowerCase().includes(deferredQuery.toLowerCase())
-      )
-    : items;
+  // Cmd+K / Ctrl+K to open
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsOpen(prev => !prev);
+        setQuery('');
+        setActiveIndex(0);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
-  // Group filtered items
-  const groups = filteredItems.reduce<Record<string, CommandItem[]>>((acc, item) => {
-    const group = item.group || 'Commands';
-    if (!acc[group]) acc[group] = [];
-    acc[group].push(item);
-    return acc;
-  }, {});
-
-  // Reset state on open/close
+  // Focus input when opening
   useEffect(() => {
     if (isOpen) {
-      setQuery('');
-      setActiveIndex(0);
-      // Slight delay to ensure dialog is rendered
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [isOpen]);
+
+  const filtered = commands.filter(cmd =>
+    cmd.label.toLowerCase().includes(query.toLowerCase())
+  );
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setActiveIndex(prev => Math.min(prev + 1, filteredItems.length - 1));
+        setActiveIndex(prev => Math.min(prev + 1, filtered.length - 1));
         break;
       case 'ArrowUp':
         e.preventDefault();
@@ -2369,126 +2369,122 @@ function CommandPalette({ isOpen, onClose, items, placeholder = 'Type a command.
         break;
       case 'Enter':
         e.preventDefault();
-        if (filteredItems[activeIndex]) {
-          filteredItems[activeIndex].onSelect();
-          onClose();
+        if (filtered[activeIndex]) {
+          filtered[activeIndex].onSelect();
+          setIsOpen(false);
+          setQuery('');
         }
         break;
       case 'Escape':
         e.preventDefault();
-        onClose();
+        setIsOpen(false);
+        setQuery('');
         break;
     }
-  }, [filteredItems, activeIndex, onClose]);
+  }, [filtered, activeIndex]);
+
+  // Reset active index when query changes
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [query]);
+
+  // Merge refs
+  const setRef = useCallback((node: HTMLDivElement | null) => {
+    (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+  }, [ref]);
 
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="fixed inset-0 z-[var(--z-overlay)] bg-black/50 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+    <div className="fixed inset-0 z-[var(--z-modal,40)] flex items-start justify-center pt-[20vh]">
+      {/* Backdrop */}
       <div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={() => { setIsOpen(false); setQuery(''); }}
+        aria-hidden="true"
+      />
+      {/* Palette */}
+      <div
+        ref={setRef}
         role="dialog"
-        aria-modal="true"
         aria-label="Command palette"
-        className="fixed top-[20%] left-1/2 -translate-x-1/2 z-[var(--z-modal)] w-full max-w-lg rounded-xl border border-gray-200 bg-white shadow-2xl dark:bg-gray-900 dark:border-gray-700 overflow-hidden"
+        aria-modal="true"
+        className="relative w-full max-w-lg rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl overflow-hidden"
         onKeyDown={handleKeyDown}
       >
-        <div className="flex items-center gap-2 px-4 border-b dark:border-gray-700">
+        <div className="flex items-center border-b border-gray-200 dark:border-gray-700 px-4">
           <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
             ref={inputRef}
             type="text"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls={`${paletteId}-listbox`}
+            aria-activedescendant={filtered[activeIndex] ? `${paletteId}-${filtered[activeIndex].id}` : undefined}
+            aria-autocomplete="list"
             value={query}
-            onChange={(e) => { setQuery(e.target.value); setActiveIndex(0); }}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder={placeholder}
-            className="flex-1 py-3 bg-transparent border-0 focus:outline-none focus:ring-0 text-sm dark:text-gray-100 dark:placeholder-gray-500"
-            aria-controls={listId}
-            aria-activedescendant={activeIndex >= 0 ? `${listId}-${filteredItems[activeIndex]?.id}` : undefined}
-            aria-label="Search commands"
+            className="flex-1 border-0 bg-transparent px-3 py-3 text-sm focus:outline-none focus:ring-0 dark:text-gray-100 dark:placeholder-gray-500"
           />
-          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 text-xs text-gray-400 bg-gray-100 rounded dark:bg-gray-800 dark:text-gray-500">ESC</kbd>
+          <kbd className="hidden sm:inline-block px-2 py-0.5 text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">Esc</kbd>
         </div>
         <ul
-          id={listId}
+          id={`${paletteId}-listbox`}
           role="listbox"
-          className="max-h-72 overflow-y-auto py-2"
-          aria-label="Command results"
+          aria-label="Commands"
+          className="max-h-64 overflow-y-auto py-2"
         >
-          {filteredItems.length === 0 && (
+          {filtered.length === 0 && (
             <li className="px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">No results found</li>
           )}
-          {Object.entries(groups).map(([group, items]) => (
-            <li key={group} role="group" aria-label={group}>
-              <div className="px-4 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{group}</div>
-              {items.map((item) => {
-                const globalIndex = filteredItems.indexOf(item);
-                return (
-                  <div
-                    key={item.id}
-                    id={`${listId}-${item.id}`}
-                    role="option"
-                    aria-selected={globalIndex === activeIndex}
-                    className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm transition-colors ${
-                      globalIndex === activeIndex
-                        ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light'
-                        : 'text-gray-700 dark:text-gray-300'
-                    }`}
-                    onClick={() => { item.onSelect(); onClose(); }}
-                    onMouseEnter={() => setActiveIndex(globalIndex)}
-                  >
-                    {item.icon && <span className="shrink-0" aria-hidden="true">{item.icon}</span>}
-                    <span className="flex-1 truncate">{item.label}</span>
-                    {item.shortcut && (
-                      <kbd className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">{item.shortcut}</kbd>
-                    )}
-                  </div>
-                );
-              })}
+          {filtered.map((cmd, idx) => (
+            <li
+              key={cmd.id}
+              id={`${paletteId}-${cmd.id}`}
+              role="option"
+              aria-selected={idx === activeIndex}
+              onClick={() => { cmd.onSelect(); setIsOpen(false); setQuery(''); }}
+              onMouseEnter={() => setActiveIndex(idx)}
+              className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm transition-colors ${
+                idx === activeIndex
+                  ? 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary'
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              {cmd.icon && <span className="shrink-0" aria-hidden="true">{cmd.icon}</span>}
+              <span className="flex-1">{cmd.label}</span>
+              {cmd.shortcut && (
+                <kbd className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700">{cmd.shortcut}</kbd>
+              )}
             </li>
           ))}
         </ul>
       </div>
-    </>
+    </div>
   );
 }
-
-// Global keyboard shortcut hook
-function useCommandPalette() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsOpen(prev => !prev);
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  return { isOpen, open: () => setIsOpen(true), close: () => setIsOpen(false), toggle: () => setIsOpen(prev => !prev) };
-}
 ```
+
+> **Keyboard shortcuts:** `Cmd+K` (macOS) or `Ctrl+K` (Windows/Linux) opens the palette. Arrow keys navigate, Enter selects, Escape closes. The component follows the WAI-ARIA combobox pattern with `role="combobox"`, `aria-expanded`, `aria-activedescendant`, and `aria-autocomplete="list"`.
 
 ## 4.26 Additional Component References
 
 | Component | Key Features | Full Implementation |
 |-----------|-------------|---------------------|
 | Toast/Notification | aria-live, CSS progress animation, stacking, deterministic ID | 4.15 Toast |
-| Navigation Bar | skip link, keyboard nav, mobile hamburger with aria-expanded | 4.16 Navbar |
-| Breadcrumb | aria-label, structured data (Schema.org), current page | 4.17 Breadcrumb |
+| Navigation Bar | skip link, keyboard nav, mobile hamburger | 4.16 Navbar |
+| Breadcrumb | aria-label, structured data, current page | 4.17 Breadcrumb |
 | Tooltip | anchor positioning, delay show/hide, keyboard trigger, cleanup | 4.18 Tooltip |
 | Password Input | visibility toggle, strength indicator, aria-live | 4.19 PasswordInput |
 | Radio Group | arrow key nav, aria-checked, descriptions, no redundant ARIA | 4.20 RadioGroup |
-| Data Table | sortable, scope="col"/"row", caption, content-visibility, useMemo | 4.21 DataTable |
+| Data Table | sortable, scope/caption, content-visibility, useMemo | 4.21 DataTable |
 | Pagination | aria-current, ellipsis, Previous/Next | 4.22 Pagination |
 | Dropdown Menu | roving tabindex, type-ahead, Escape to close | 4.11 Select pattern |
-| Drawer/Sheet | edge-anchored, aria-modal, body scroll lock, Escape close | 4.23 Drawer |
-| Avatar/AvatarGroup | image fallback, initials, status indicator, overflow | 4.24 Avatar |
-| Command Palette | Cmd+K shortcut, useDeferredValue, grouped results, keyboard nav | 4.25 CommandPalette |
 
 ---
 

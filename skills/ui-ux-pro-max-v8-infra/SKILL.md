@@ -5,12 +5,11 @@ description: >
   involves design tokens, color palettes, CSS primitives, theming (dark mode, theme switching),
   typography, spacing systems, OKLCH colors, APCA contrast, Tailwind v4 @theme integration,
   container queries, @starting-style, @layer, @scope, @property, CSS nesting, visual direction,
-  style selection, font pairings, industry design rules, embedded data lookups for styles,
-  palettes, fonts, and rules, infrastructure hooks (IntersectionObserver, Drawer patterns),
-  or React 19 infrastructure patterns (use() hook). This is the infrastructure layer — it provides
-  the design system foundation (tokens, CSS primitives, theme system, data tables, hooks) that
-  Part B (components) and Part C (data) consume. Do NOT activate for React component implementations,
-  motion presets, validation checklists, or advanced component patterns — those belong in Part B.
+  style selection, font pairings, industry design rules, or embedded data lookups for styles,
+  palettes, fonts, and rules. This is the infrastructure layer — it provides the design system
+  foundation (tokens, CSS primitives, theme system, data tables) that Part B (components) and
+  Part C (data) consume. Do NOT activate for React component implementations, motion presets,
+  validation checklists, or advanced component patterns — those belong in Part B.
 version: "8.0.0"
 ---
 
@@ -940,17 +939,17 @@ h1, h2, h3 { text-wrap: balance; }
 
 # MODULE 7: DATA TABLE REFERENCES
 
-The full data tables (60 UI styles, 48 color palettes, 36 font pairings, 21 industry rules) are stored as CSV files in the `ui-ux-pro-max-v8-data` skill for efficient lookup. Reference them when you need to match an industry/domain to a specific style, palette, font, or rule.
+The full data tables (67 UI styles, 96 color palettes, 56 font pairings, 100 industry reasoning rules) are stored as CSV files in the `ui-ux-pro-max-v8-data` skill for efficient lookup. Reference them when you need to match an industry/domain to a specific style, palette, font, or rule. **Part C (`ui-ux-pro-max-v8-data`) is the single source of truth** for all record counts — the numbers below reflect the latest data.
 
 ## CSV File Map
 
 | Data Category | CSV Path | Content |
 |---------------|----------|---------|
-| UI Styles | `ui-ux-pro-max-v8-data/data/styles.csv` | 60 curated styles with performance, a11y, key effects |
-| Color Palettes | `ui-ux-pro-max-v8-data/data/colors.csv` | 48 palettes with OKLCH + Hex, primary/secondary/CTA/bg/text |
-| Font Pairings | `ui-ux-pro-max-v8-data/data/typography.csv` | 36 verified Google Fonts pairs with mood, best-for, URLs |
-| Industry Rules | `ui-ux-pro-max-v8-data/data/ui-reasoning.csv` | 21 rules: pattern, style, color mood, typography, effects, anti-patterns |
-| Landing Patterns | `ui-ux-pro-max-v8-data/data/landing.csv` | 8 landing page patterns with conversion focus |
+| UI Styles | `ui-ux-pro-max-v8-data/data/styles.csv` | 67 curated styles (42 general + 15 landing + 10 dashboard) with performance, a11y, key effects |
+| Color Palettes | `ui-ux-pro-max-v8-data/data/colors.csv` | 96 palettes with Hex, primary/secondary/CTA/bg/text/border |
+| Font Pairings | `ui-ux-pro-max-v8-data/data/typography.csv` | 56 verified Google Fonts pairs with mood, best-for, URLs |
+| Industry Reasoning | `ui-ux-pro-max-v8-data/data/ui-reasoning.csv` | 100 rules: pattern, style, color mood, typography, effects, decision rules, anti-patterns |
+| Landing Patterns | `ui-ux-pro-max-v8-data/data/landing.csv` | 30 landing page patterns with conversion focus |
 | UX Guidelines | `ui-ux-pro-max-v8-data/data/ux-guidelines.csv` | Accessibility and UX audit guidelines |
 | Web Interface | `ui-ux-pro-max-v8-data/data/web-interface.csv` | Web interface audit criteria |
 | Charts | `ui-ux-pro-max-v8-data/data/charts.csv` | Chart type recommendations |
@@ -961,19 +960,28 @@ The full data tables (60 UI styles, 48 color palettes, 36 font pairings, 21 indu
 
 ## Quick Reference: Data Categories
 
-### UI Styles (60)
+### UI Styles (67)
 - **General (42):** Minimalism, Neumorphism, Glassmorphism, Brutalism, 3D, Dark Mode OLED, Accessible & Ethical, Claymorphism, Aurora UI, Retro-Futurism, Flat Design 2.0, Soft UI, Neubrutalism, Bento Grid, Y2K, Cyberpunk, Biophilic, AI-Native UI, Vaporwave, Dimensional Layering, Exaggerated Minimalism, Kinetic Typography, Parallax Storytelling, Swiss Modernism 2.0, HUD/Sci-Fi FUI, Pixel Art, Spatial UI, E-Ink/Paper, Gen Z Chaos, Biomimetic, Anti-Polish/Raw, Tactile Digital, Nature Distilled, Interactive Cursor, Voice-First, 3D Product Preview, Gradient Mesh/Aurora Evolved, Editorial Grid, Chromatic Aberration, Vintage Analog, Liquid Glass
-- **Landing (8):** Hero-Centric, Conversion-Optimized, Feature-Rich Showcase, Minimal & Direct, Social Proof-Focused, Interactive Demo, Trust & Authority, Storytelling-Driven
+- **Landing (15):** Hero-Centric, Conversion-Optimized, Feature-Rich Showcase, Minimal & Direct, Social Proof-Focused, Interactive Demo, Trust & Authority, Storytelling-Driven, and 7 more industry-specific variants
 - **Dashboard (10):** Data-Dense, Heat Map, Executive, Real-Time Monitoring, Drill-Down, Comparative, Predictive, User Behavior, Financial, Sales Intelligence
 
-### Color Palettes (48 — OKLCH + Hex)
-SaaS & Tech (8), E-Commerce (8), Healthcare (6), Finance & Insurance (6), Beauty & Wellness (6), Creative & Education (8), Restaurant & Hospitality (6)
+### Color Palettes (96 — Hex + OKLCH progressive enhancement)
+SaaS & Tech, E-Commerce, Healthcare, Finance & Insurance, Beauty & Wellness, Creative & Education, Restaurant & Hospitality, and 20+ additional product categories. Each palette provides Primary, Secondary, CTA, Background, Text, and Border hex colors with usage notes.
 
-### Font Pairings (36 — Verified Google Fonts)
-Sans-Serif Pairs (16), Serif + Sans Pairs (12), Monospace + Sans Pairs (5), Self-Hosted Fonts (16 alternatives)
+### Font Pairings (56 — Verified Google Fonts)
+Sans-Serif Pairs, Serif + Sans Pairs, Monospace + Sans Pairs, Display + Sans Pairs, and Self-Hosted alternatives. Each pairing includes heading font, body font, mood keywords, Google Fonts URL, CSS import, and Tailwind config.
 
-### Industry Rules (21)
-Technology & SaaS (5), Finance & Insurance (4), Healthcare (4), E-Commerce & Services (4), Creative & Education (4)
+### Industry Reasoning (100)
+100 product-type-to-UI reasoning rules mapping each industry to recommended patterns, style priorities, color moods, typography moods, key effects, conditional decision rules (JSON), and anti-patterns. Covers Technology & SaaS, Finance & Insurance, Healthcare, E-Commerce & Services, Creative & Education, and many more.
+
+### Additional Data Categories
+- **UX Guidelines (98):** Do/don't guidelines across Navigation, Animation, Layout, Touch, Interaction, Accessibility, Performance, Forms, Responsive, Typography, Feedback, Content, Onboarding, Search, Data Entry, AI Interaction, Spatial UI, and Sustainability
+- **Web Interface (30):** Accessibility, Focus, Forms, Performance, State, Typography, and Anti-Pattern guidelines for React/Next.js
+- **Charts (25):** Chart type recommendations with color guidance, accessibility notes, and library recommendations
+- **Icons (100):** Lucide icon mappings for 100 common UI actions/categories
+- **Products (95):** Complete product type → style/pattern/dash/color mapping
+- **React Performance (44):** Async Waterfall, Bundle Size, Server, Client, Rerender, Rendering, JS Perf, and Advanced optimization patterns
+- **Framework Stacks (13):** Per-framework best practices (nextjs, react, vue, svelte, astro, nuxtjs, nuxt-ui, shadcn, react-native, flutter, swiftui, jetpack-compose, html-tailwind)
 
 ---
 
@@ -995,35 +1003,55 @@ Dark mode must be more than inverting colors. Never simply swap white for black 
   --color-bg-primary: oklch(0.98 0.01 260);
   --color-bg-secondary: oklch(1.0 0.00 0);
   --color-bg-tertiary: oklch(0.95 0.01 260);
+  --color-bg-inverse: oklch(0.15 0.02 260);
   --color-text-primary: oklch(0.15 0.02 260);
   --color-text-secondary: oklch(0.35 0.02 260);
   --color-text-tertiary: oklch(0.55 0.02 260);
-  --color-border: oklch(0.88 0.01 260);
+  --color-text-inverse: oklch(0.98 0.01 260);
+  --color-border-default: oklch(0.88 0.01 260);
+  --color-border-strong: oklch(0.75 0.02 260);
   --color-primary: oklch(0.55 0.20 260);
   --color-primary-hover: oklch(0.50 0.22 260);
-  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.1);
+  --color-primary-subtle: oklch(0.55 0.20 260 / 0.1);
+  --color-success: oklch(0.65 0.17 145);
+  --color-warning: oklch(0.72 0.15 85);
+  --color-error: oklch(0.55 0.22 25);
+  --color-info: oklch(0.58 0.12 210);
+  /* Shadows — reference Module 2 definitions; these are theme-aware overrides */
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Elevation — for dark mode surfaces */
   --elevation-base: oklch(0.13 0.02 260);
   --elevation-raised: oklch(0.18 0.02 260);
   --elevation-overlay: oklch(0.22 0.02 260);
 }
 
 /* Dark theme */
+.dark,
 [data-theme="dark"] {
   color-scheme: dark;
   --color-bg-primary: oklch(0.15 0.02 260);
   --color-bg-secondary: oklch(0.18 0.02 260);
   --color-bg-tertiary: oklch(0.22 0.02 260);
+  --color-bg-inverse: oklch(0.98 0.01 260);
   --color-text-primary: oklch(0.90 0.01 260);
   --color-text-secondary: oklch(0.70 0.02 260);
   --color-text-tertiary: oklch(0.55 0.02 260);
-  --color-border: oklch(0.30 0.02 260);
+  --color-text-inverse: oklch(0.15 0.02 260);
+  --color-border-default: oklch(0.30 0.02 260);
+  --color-border-strong: oklch(0.40 0.02 260);
   --color-primary: oklch(0.65 0.18 260);
   --color-primary-hover: oklch(0.70 0.20 260);
-  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.5);
+  --color-primary-subtle: oklch(0.65 0.18 260 / 0.15);
+  --color-success: oklch(0.70 0.15 145);
+  --color-warning: oklch(0.78 0.13 85);
+  --color-error: oklch(0.65 0.20 25);
+  --color-info: oklch(0.65 0.10 210);
+  /* Dark mode shadows — higher opacity for visibility */
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3), 0 1px 2px rgb(0 0 0 / 0.18);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
   --elevation-base: oklch(0.13 0.02 260);
   --elevation-raised: oklch(0.18 0.02 260);
   --elevation-overlay: oklch(0.22 0.02 260);
@@ -1041,17 +1069,50 @@ Dark mode must be more than inverting colors. Never simply swap white for black 
 ### System Preference Detection
 
 ```css
+/* Auto-detect OS dark mode preference when no manual override is set */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
+    color-scheme: dark;
     --color-bg-primary: oklch(0.15 0.02 260);
     --color-bg-secondary: oklch(0.18 0.02 260);
-    /* ... all dark tokens ... */
+    --color-bg-tertiary: oklch(0.22 0.02 260);
+    --color-bg-inverse: oklch(0.98 0.01 260);
+    --color-text-primary: oklch(0.90 0.01 260);
+    --color-text-secondary: oklch(0.70 0.02 260);
+    --color-text-tertiary: oklch(0.55 0.02 260);
+    --color-text-inverse: oklch(0.15 0.02 260);
+    --color-border-default: oklch(0.30 0.02 260);
+    --color-border-strong: oklch(0.40 0.02 260);
+    --color-primary: oklch(0.65 0.18 260);
+    --color-primary-hover: oklch(0.70 0.20 260);
+    --color-primary-subtle: oklch(0.65 0.18 260 / 0.15);
+    --color-success: oklch(0.70 0.15 145);
+    --color-warning: oklch(0.78 0.13 85);
+    --color-error: oklch(0.65 0.20 25);
+    --color-info: oklch(0.65 0.10 210);
+    --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3), 0 1px 2px rgb(0 0 0 / 0.18);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+    --elevation-base: oklch(0.13 0.02 260);
+    --elevation-raised: oklch(0.18 0.02 260);
+    --elevation-overlay: oklch(0.22 0.02 260);
   }
 }
 
 /* Manual override takes priority over OS preference */
-[data-theme="light"] { /* light tokens */ }
-[data-theme="dark"] { /* dark tokens */ }
+[data-theme="light"] {
+  color-scheme: light;
+  --color-bg-primary: oklch(0.98 0.01 260);
+  --color-bg-secondary: oklch(1.0 0.00 0);
+  --color-bg-tertiary: oklch(0.95 0.01 260);
+  --color-text-primary: oklch(0.15 0.02 260);
+  --color-text-secondary: oklch(0.35 0.02 260);
+  --color-border-default: oklch(0.88 0.01 260);
+  --color-primary: oklch(0.55 0.20 260);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
 ```
 
 ## 9.2 React Theme Provider
@@ -1399,223 +1460,5 @@ Set `--theme-origin-x` and `--theme-origin-y` to the toggle button coordinates b
 - Include: spacing scale, type scale, 2-3 font pair options, color tokens (OKLCH + hex), component states
 - Always cover: empty/loading/error, keyboard navigation, focus states, contrast
 - Run anti-pattern checklist (Part B Module 1.2) before delivery
-
----
-
-# MODULE 11: INFRASTRUCTURE HOOKS
-
-## 11.1 useIntersectionObserver Hook
-
-A reusable, StrictMode-safe IntersectionObserver hook for Part B components. Stores the observer in a ref to prevent double-registration in React Strict Mode development environments.
-
-```tsx
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
-
-export interface UseIntersectionObserverOptions {
-  threshold?: number | number[];
-  rootMargin?: string;
-  root?: Element | null;
-  /** If true, unobserve after first intersection (one-time trigger) */
-  once?: boolean;
-}
-
-export interface UseIntersectionObserverReturn {
-  isIntersecting: boolean;
-  entry: IntersectionObserverEntry | null;
-  ref: React.RefCallback<Element>;
-}
-
-function useIntersectionObserver(
-  options: UseIntersectionObserverOptions = {}
-): UseIntersectionObserverReturn {
-  const { threshold = 0, rootMargin = '0px', root = null, once = false } = options;
-  const [isIntersecting, setIsIntersecting] = useState(false);
-  const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const elementRef = useRef<Element | null>(null);
-
-  const refCallback = useRef((node: Element | null) => {
-    // Disconnect existing observer (handles Strict Mode double-mount)
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-      observerRef.current = null;
-    }
-
-    elementRef.current = node;
-    if (!node) return;
-
-    observerRef.current = new IntersectionObserver(
-      ([entry]) => {
-        setEntry(entry);
-        setIsIntersecting(entry.isIntersecting);
-
-        if (entry.isIntersecting && once) {
-          observerRef.current?.unobserve(node);
-        }
-      },
-      { threshold, rootMargin, root }
-    );
-
-    observerRef.current.observe(node);
-  }).current;
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
-      }
-    };
-  }, []);
-
-  return { isIntersecting, entry, ref: refCallback };
-}
-
-// Usage:
-// const { isIntersecting, ref } = useIntersectionObserver({ threshold: 0.1, once: true });
-// return <div ref={ref}>{isIntersecting ? 'Visible!' : 'Not yet...'}</div>;
-```
-
-## 11.2 Drawer/Sheet CSS Patterns
-
-Drawer/Sheet components use edge-anchored positioning with slide animations. Two CSS-first approaches are provided — the native Popover API approach (no JavaScript for positioning) and the traditional fixed-position approach.
-
-### Native Popover API Approach (Recommended for New Projects)
-
-```css
-/* Drawer that uses the Popover API — no JS for open/close */
-.drawer-right {
-  position: fixed;
-  inset-y: 0;
-  right: 0;
-  width: min(320px, 85vw);
-  background: var(--surface-raised);
-  box-shadow: var(--shadow-2xl);
-  border-left: 1px solid var(--color-border);
-
-  /* Popover animation */
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out,
-    overlay 0.3s allow-discrete, display 0.3s allow-discrete;
-
-  &:popover-open {
-    transform: translateX(0);
-    opacity: 1;
-
-    @starting-style {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-  }
-
-  /* Closed state */
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-.drawer-left {
-  position: fixed;
-  inset-y: 0;
-  left: 0;
-  width: min(320px, 85vw);
-  background: var(--surface-raised);
-  box-shadow: var(--shadow-2xl);
-  border-right: 1px solid var(--color-border);
-
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out,
-    overlay 0.3s allow-discrete, display 0.3s allow-discrete;
-
-  &:popover-open {
-    transform: translateX(0);
-    opacity: 1;
-
-    @starting-style {
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-  }
-
-  transform: translateX(-100%);
-  opacity: 0;
-}
-```
-
-```html
-<!-- Trigger -->
-<button popovertarget="my-drawer">Open Drawer</button>
-
-<!-- Drawer panel -->
-<div id="my-drawer" popover="auto" class="drawer-right">
-  <div class="p-4">
-    <h2 class="text-lg font-semibold">Drawer Title</h2>
-    <p class="mt-2 text-sm">Drawer content here.</p>
-  </div>
-</div>
-```
-
-### Tailwind v4 Drawer Utilities
-
-```css
-@theme {
-  --animate-drawer-right-in: drawerRightIn 0.3s ease-out;
-  --animate-drawer-right-out: drawerRightOut 0.2s ease-in;
-  --animate-drawer-left-in: drawerLeftIn 0.3s ease-out;
-  --animate-drawer-left-out: drawerLeftOut 0.2s ease-in;
-}
-
-@keyframes drawerRightIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-@keyframes drawerRightOut {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(100%); opacity: 0; }
-}
-@keyframes drawerLeftIn {
-  from { transform: translateX(-100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-@keyframes drawerLeftOut {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(-100%); opacity: 0; }
-}
-```
-
-## 11.3 React 19 `use()` Hook Pattern
-
-React 19 introduces the `use()` hook for reading resources (Promises, contexts) during render. This replaces patterns like `use(Suspense)` for data fetching.
-
-```tsx
-import { use, Suspense } from 'react';
-
-// Note: The promise must be created outside the component
-// to avoid re-creation on every render.
-function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
-  const user = use(userPromise);
-
-  return (
-    <div className="p-4 rounded-lg border dark:border-gray-700">
-      <h2 className="text-lg font-semibold dark:text-gray-100">{user.name}</h2>
-      <p className="text-sm text-gray-600 dark:text-gray-400">{user.email}</p>
-    </div>
-  );
-}
-
-// Parent wraps in Suspense boundary
-function ProfilePage() {
-  const userPromise = fetchUser(); // Created outside render or via cache
-  return (
-    <ErrorBoundary>
-      <Suspense fallback={<Skeleton height="4rem" index={0} />}>
-        <UserProfile userPromise={userPromise} />
-      </Suspense>
-    </ErrorBoundary>
-  );
-}
-```
-
-> **Important:** `use()` can only be called at the top level of a component (like all hooks). It integrates with Suspense for loading states and Error Boundaries for error handling. Never call `use()` conditionally.
 - Run pre-delivery checklist (Part B Module 6.1) before delivery
 - Cross-reference other skills when the task exceeds this skill's scope
