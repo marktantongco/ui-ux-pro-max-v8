@@ -150,22 +150,35 @@ Extract from user request:
 ```
 
 ### MATCH Step
-Run the design system generator:
+Search Part C data files for best-fit style/palette/font/rule:
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<product_type> <style_keywords>" --design-system -p "Project Name"
+# Search all domains for a product type
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain product --query "<product_type>" --format json
+
+# Search for matching styles
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain style --query "<style_keywords>" --format json
+
+# Search for color palettes
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain color --query "<product_type>" --format json
+
+# Search for font pairings
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain typography --query "<mood_keywords>" --format json
+
+# Search for industry reasoning rules
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain reasoning --query "<product_type>" --format json
 ```
 
-Or search individual domains:
-```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
-```
+Available domains: product, style, color, typography, reasoning, ux, chart, icon, web, performance, landing, stack:nextjs, stack:react, stack:vue, stack:svelte, stack:astro, stack:shadcn, stack:html-tailwind, stack:nuxtjs, stack:nuxt-ui, stack:react-native, stack:flutter, stack:swiftui, stack:jetpack-compose
 
-Available domains: product, style, color, landing, typography, chart, ux, icons, react, web
+Use `--list-domains` to see all available domains:
+```bash
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --list-domains
+```
 
 ### COMMIT Step
 Generate the design system with persistence:
 ```bash
-python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py "<query>" --design-system --persist -p "Project Name"
 ```
 
 This creates:
@@ -423,7 +436,7 @@ function Tabs({ items, defaultTab, ref }: TabsProps) {
 
   return (
     <div ref={ref}>
-      <div role="tablist" aria-label="Content tabs" onKeyDown={handleKeyDown}>
+      <div role="tablist" aria-label="Content tabs" aria-orientation="horizontal" onKeyDown={handleKeyDown}>
         {items.map((item) => (
           <button
             key={item.id}
@@ -756,6 +769,13 @@ function CursorFollower() {
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
+      cursor.style.display = 'none';
+      return;
+    }
+
+    // Check for touch-primary devices
+    const isTouchPrimary = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouchPrimary) {
       cursor.style.display = 'none';
       return;
     }
@@ -1161,6 +1181,7 @@ function Select({
         aria-expanded={isOpen}
         aria-controls={listboxId}
         aria-activedescendant={activeIndex >= 0 ? `${listboxId}-${enabledOptions[activeIndex]?.value}` : undefined}
+        aria-autocomplete="none"
         aria-haspopup="listbox"
         onClick={() => setIsOpen(prev => !prev)}
         onKeyDown={handleKeyDown}
@@ -1338,6 +1359,7 @@ function Textarea({
 ```tsx
 'use client';
 
+import { useId } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -1357,6 +1379,7 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
   } = useForm<ContactForm>({
     resolver: zodResolver(contactSchema),
   });
+  const subscribeId = useId();
 
   const handleFormSubmit = async (data: ContactForm) => {
     await onSubmit(data);
@@ -1417,8 +1440,8 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
       </div>
 
       <div className="flex items-center gap-2">
-        <input type="checkbox" className="h-4 w-4 rounded accent-primary" {...register('subscribe')} />
-        <label className="text-sm text-gray-700 dark:text-gray-300">Subscribe to newsletter</label>
+        <input id={subscribeId} type="checkbox" className="h-4 w-4 rounded accent-primary" {...register('subscribe')} />
+        <label htmlFor={subscribeId} className="text-sm text-gray-700 dark:text-gray-300">Subscribe to newsletter</label>
       </div>
 
       <button
@@ -3018,30 +3041,23 @@ When two skills give conflicting advice, resolve using this hierarchy:
 This skill bundles data accessible via Python scripts:
 
 ```bash
-# Design system generation
-python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system -p "Project Name"
-
 # Domain-specific searches
-python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain>
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain <domain> --query "<keyword>" --format json
 
 # Stack-specific guidelines
-python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack <stack>
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --domain stack:<stack> --query "<keyword>" --format json
+
+# List all available domains
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py --list-domains
 
 # Persistence
-python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project"
-python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project" --page "dashboard"
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py "<query>" --design-system --persist -p "Project"
+python3 skills/ui-ux-pro-max-v8-data/scripts/lookup.py "<query>" --design-system --persist -p "Project" --page "dashboard"
 ```
 
-Available domains: product, style, color, landing, typography, chart, ux, icons, react, web
+Available domains: product, style, color, typography, reasoning, ux, chart, icon, web, performance, landing, stack:nextjs, stack:react, stack:vue, stack:svelte, stack:astro, stack:shadcn, stack:html-tailwind, stack:nuxtjs, stack:nuxt-ui, stack:react-native, stack:flutter, stack:swiftui, stack:jetpack-compose
 
-Available stacks: html-tailwind, react, nextjs, vue, nuxtjs, nuxt-ui, svelte, astro, swiftui, react-native, flutter, shadcn, jetpack-compose
-
-Data files location: `skills/ui-ux-pro-max/data/`
-- styles.csv (67 entries), colors.csv (96 palettes), typography.csv (57 pairings)
-- products.csv, landing.csv, charts.csv, icons.csv
-- ux-guidelines.csv, react-performance.csv, web-interface.csv
-- ui-reasoning.csv (100 reasoning rules)
-- stacks/*.csv (13 stack-specific guideline files)
+Data files location: `skills/ui-ux-pro-max-v8-data/data/`
 
 ---
 

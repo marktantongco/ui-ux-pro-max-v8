@@ -78,6 +78,7 @@ When the DESIGN intent triggers `ui-ux-pro-max`-related queries, route to the co
 | "palette for fintech", "font pairing for luxury", "style specs for glassmorphism", "UX rules for animation" | Data Lookup | `ui-ux-pro-max-v8-data` |
 | "design AND build a dashboard" | Full Stack | `ui-ux-pro-max-v8-infra` → `ui-ux-pro-max-v8-components` (chain) |
 | "what palette for SaaS AND build the components" | Full Stack | `ui-ux-pro-max-v8-data` → `ui-ux-pro-max-v8-components` (chain) |
+| "which fonts for healthcare and how to apply them", "pick palette and explain the design reasoning" | Data + Theory | `ui-ux-pro-max-v8-data` (has Quick Theory section) — optionally chain with `ui-ux-pro-max-v8-infra` for deep theory |
 
 **Decision Tree:**
 ```
@@ -88,12 +89,18 @@ Is this a UI/UX design query?
 │   ├─► Design foundations (tokens, CSS, themes)? → ui-ux-pro-max-v8-infra
 │   ├─► Component implementation (React, a11y)? → ui-ux-pro-max-v8-components
 │   ├─► Specific data lookup (palette, font)? → ui-ux-pro-max-v8-data
-│   └─► Both design + build? → ui-ux-pro-max-v8-infra → ui-ux-pro-max-v8-components
+│   │   └─► Needs design theory too? → Part C has Quick Theory; chain Part A for deep theory
+│   ├─► Both design + build? → ui-ux-pro-max-v8-infra → ui-ux-pro-max-v8-components
+│   └─► Full build (design + data + code)? → ui-ux-pro-max-v8-infra → ui-ux-pro-max-v8-components → ui-ux-pro-max-v8-data (lookup)
 │
 └─► NO: Route to other skill stacks
 ```
 
-**Key Rule**: Only load the part(s) needed. A query about "dark mode tokens" should NOT load the component library. A query about "build a modal" should NOT load the full palette data.
+**Key Rules**:
+1. Only load the part(s) needed. A query about "dark mode tokens" should NOT load the component library.
+2. Part C now includes a "Quick Theory Reference" section for data-only queries — this closes the quality gap without requiring Part A.
+3. For queries needing BOTH data AND deep design theory (e.g., "explain the typography principles behind this font pairing"), chain Part C (data) → Part A (theory).
+4. The old v7 skill (`ui-ux-pro-max`) is DEPRECATED. All v7 path references have been updated to v8 paths.
 
 ### Step 6: Single-Skill Fast Path
 

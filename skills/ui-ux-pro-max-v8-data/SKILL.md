@@ -32,6 +32,34 @@ Activate this skill when the query involves:
 **Do NOT activate** for: generating new designs from scratch, writing component
 code (use Part B), or understanding design system philosophy (use Part A).
 
+## Quick Theory Reference
+
+Essential design rules for applying data lookups correctly. For full theory, see Part A (ui-ux-pro-max-v8-infra).
+
+### Typography Rules
+- **Reading line:** Body text max-width 65-75ch. Headings may exceed but must re-wrap.
+- **Line height:** Body 1.5-1.625. Headings 1.1-1.25. Tight for impact, relaxed for reading.
+- **Font weight:** 400 for body, 600 for subheadings, 700 for headings. Never go below 300.
+- **Letter-spacing:** -0.01em for large headings, 0.01em for body. Never track body text loose.
+- **Measure:** Paragraphs >75ch strain the eye. Break into columns or add margins.
+
+### Color Rules
+- **Muted foundations:** Start desaturated (OKLCH chroma <0.05). Reserve high-chroma for interactive/status.
+- **Dark mode:** Never pure black (#000). Use oklch(0.12-0.18). Reduce chroma 10-20%. Text never pure white — use oklch(0.87-0.92).
+- **Contrast:** Body text WCAG 4.5:1 minimum. Large text 3:1. UI components 3:1. Use APCA for future-proofing.
+- **Palette rule:** 1 primary, 1 secondary, 1 CTA, 1 background, 1 text, 1 border. Maximum 3 accent colors.
+
+### Spacing Rules
+- **8-point grid:** All spacing multiples of 4px. Prefer 8px increments.
+- **Component padding:** Minimum 12px (3 units). Comfortable 16px (4 units).
+- **Touch targets:** Minimum 44x44px. Comfortable 48x48px.
+- **Gap between sections:** 64px (16 units) minimum. 96px (24 units) for major breaks.
+
+### Motion Rules
+- **Micro-interactions:** 150-300ms. Easing: ease-out.
+- **Page transitions:** 300-500ms. Easing: ease-in-out.
+- **Always check:** `prefers-reduced-motion: reduce` → disable or simplify animations.
+
 ## Data Inventory
 
 | Domain | File | Records | Description |

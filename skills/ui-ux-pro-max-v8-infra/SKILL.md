@@ -315,6 +315,25 @@ Break when:
 }
 ```
 
+### Animate height: auto Without JavaScript
+
+Use `interpolate-size: allow-keywords` to animate `height: auto` in accordions and expandable sections — no JavaScript height calculation needed:
+
+```css
+/* Animate height: auto without JavaScript */
+.accordion-content {
+  interpolate-size: allow-keywords;
+  overflow: hidden;
+  height: 0;
+  transition: height 0.3s ease-out;
+}
+.accordion-content.open {
+  height: auto;
+}
+```
+
+> **Note:** This replaces the GSAP height animation pattern for simple accordion cases. Use GSAP only when you need complex multi-property animations.
+
 ### Typographic Color
 
 ```css
@@ -989,44 +1008,7 @@ Dark mode must be more than inverting colors. Never simply swap white for black 
   color-scheme: light dark;
 }
 
-/* Light theme (default) */
-:root {
-  --color-bg-primary: oklch(0.98 0.01 260);
-  --color-bg-secondary: oklch(1.0 0.00 0);
-  --color-bg-tertiary: oklch(0.95 0.01 260);
-  --color-text-primary: oklch(0.15 0.02 260);
-  --color-text-secondary: oklch(0.35 0.02 260);
-  --color-text-tertiary: oklch(0.55 0.02 260);
-  --color-border: oklch(0.88 0.01 260);
-  --color-primary: oklch(0.55 0.20 260);
-  --color-primary-hover: oklch(0.50 0.22 260);
-  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.1);
-  --elevation-base: oklch(0.13 0.02 260);
-  --elevation-raised: oklch(0.18 0.02 260);
-  --elevation-overlay: oklch(0.22 0.02 260);
-}
-
-/* Dark theme */
-[data-theme="dark"] {
-  color-scheme: dark;
-  --color-bg-primary: oklch(0.15 0.02 260);
-  --color-bg-secondary: oklch(0.18 0.02 260);
-  --color-bg-tertiary: oklch(0.22 0.02 260);
-  --color-text-primary: oklch(0.90 0.01 260);
-  --color-text-secondary: oklch(0.70 0.02 260);
-  --color-text-tertiary: oklch(0.55 0.02 260);
-  --color-border: oklch(0.30 0.02 260);
-  --color-primary: oklch(0.65 0.18 260);
-  --color-primary-hover: oklch(0.70 0.20 260);
-  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.5);
-  --elevation-base: oklch(0.13 0.02 260);
-  --elevation-raised: oklch(0.18 0.02 260);
-  --elevation-overlay: oklch(0.22 0.02 260);
-}
+/* Full token declarations are in Module 9.4. */
 ```
 
 ### Dark Mode Anti-Patterns
@@ -1040,17 +1022,44 @@ Dark mode must be more than inverting colors. Never simply swap white for black 
 ### System Preference Detection
 
 ```css
+/* Hex fallbacks for system dark mode preference */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-bg-primary: oklch(0.15 0.02 260);
-    --color-bg-secondary: oklch(0.18 0.02 260);
-    /* ... all dark tokens ... */
+    color-scheme: dark;
+    --color-bg-primary: #1a1f2e;
+    --color-bg-secondary: #1e2433;
+    --color-bg-tertiary: #262d3d;
+    --color-text-primary: #e8eaed;
+    --color-text-secondary: #a8adb5;
+    --color-text-tertiary: #737880;
+    --color-border-default: #3a4050;
+    --color-primary: #4a8af5;
+    --color-primary-hover: #5f9cff;
+    /* ... all dark tokens with hex fallbacks ... */
+  }
+}
+
+/* Progressive enhancement: OKLCH overrides for system dark mode */
+@supports (color: oklch(0 0 0)) {
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --color-bg-primary: oklch(0.15 0.02 260);
+      --color-bg-secondary: oklch(0.18 0.02 260);
+      --color-bg-tertiary: oklch(0.22 0.02 260);
+      --color-text-primary: oklch(0.90 0.01 260);
+      --color-text-secondary: oklch(0.70 0.02 260);
+      --color-text-tertiary: oklch(0.55 0.02 260);
+      --color-border-default: oklch(0.30 0.02 260);
+      --color-primary: oklch(0.65 0.18 260);
+      --color-primary-hover: oklch(0.70 0.20 260);
+      /* ... all dark tokens with OKLCH ... */
+    }
   }
 }
 
 /* Manual override takes priority over OS preference */
-[data-theme="light"] { /* light tokens */ }
-[data-theme="dark"] { /* dark tokens */ }
+[data-theme="light"] { /* light tokens — see Module 9.4 */ }
+[data-theme="dark"] { /* dark tokens — see Module 9.4 */ }
 ```
 
 ## 9.2 React Theme Provider
@@ -1172,32 +1181,60 @@ Add this inline script in `<head>` before any CSS loads:
   --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.1);
 }
 
-/* Dark theme — complete token override */
+/* Dark theme — hex fallbacks first */
 .dark,
 [data-theme="dark"] {
-  --color-bg-primary: oklch(0.15 0.02 260);
-  --color-bg-secondary: oklch(0.18 0.02 260);
-  --color-bg-tertiary: oklch(0.22 0.02 260);
-  --color-bg-inverse: oklch(0.98 0.01 260);
-  --color-text-primary: oklch(0.90 0.01 260);
-  --color-text-secondary: oklch(0.70 0.02 260);
-  --color-text-tertiary: oklch(0.55 0.02 260);
-  --color-text-inverse: oklch(0.15 0.02 260);
-  --color-border-default: oklch(0.30 0.02 260);
-  --color-border-strong: oklch(0.40 0.02 260);
-  --color-primary: oklch(0.65 0.18 260);
-  --color-primary-hover: oklch(0.70 0.20 260);
-  --color-primary-subtle: oklch(0.65 0.18 260 / 0.15);
-  --color-success: oklch(0.70 0.15 145);
-  --color-warning: oklch(0.78 0.13 85);
-  --color-error: oklch(0.65 0.20 25);
-  --color-info: oklch(0.65 0.10 210);
+  color-scheme: dark;
+  --color-bg-primary: #1a1f2e;
+  --color-bg-secondary: #1e2433;
+  --color-bg-tertiary: #262d3d;
+  --color-bg-inverse: #f8f9fa;
+  --color-text-primary: #e8eaed;
+  --color-text-secondary: #a8adb5;
+  --color-text-tertiary: #737880;
+  --color-text-inverse: #1a1f2e;
+  --color-border-default: #3a4050;
+  --color-border-strong: #4f5666;
+  --color-primary: #4a8af5;
+  --color-primary-hover: #5f9cff;
+  --color-primary-subtle: rgba(74, 138, 245, 0.15);
+  --color-success: #3dba6a;
+  --color-warning: #d4a24c;
+  --color-error: #e04e4e;
+  --color-info: #4a8ab5;
   --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px rgb(0 0 0 / 0.4);
   --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.5);
-  --elevation-base: oklch(0.13 0.02 260);
-  --elevation-raised: oklch(0.18 0.02 260);
-  --elevation-overlay: oklch(0.22 0.02 260);
+  --elevation-base: #151a28;
+  --elevation-raised: #1e2433;
+  --elevation-overlay: #262d3d;
+}
+
+/* Progressive enhancement: OKLCH overrides for perceptually uniform values */
+@supports (color: oklch(0 0 0)) {
+  .dark,
+  [data-theme="dark"] {
+    --color-bg-primary: oklch(0.15 0.02 260);
+    --color-bg-secondary: oklch(0.18 0.02 260);
+    --color-bg-tertiary: oklch(0.22 0.02 260);
+    --color-bg-inverse: oklch(0.98 0.01 260);
+    --color-text-primary: oklch(0.90 0.01 260);
+    --color-text-secondary: oklch(0.70 0.02 260);
+    --color-text-tertiary: oklch(0.55 0.02 260);
+    --color-text-inverse: oklch(0.15 0.02 260);
+    --color-border-default: oklch(0.30 0.02 260);
+    --color-border-strong: oklch(0.40 0.02 260);
+    --color-primary: oklch(0.65 0.18 260);
+    --color-primary-hover: oklch(0.70 0.20 260);
+    --color-primary-subtle: oklch(0.65 0.18 260 / 0.15);
+    --color-success: oklch(0.70 0.15 145);
+    --color-warning: oklch(0.78 0.13 85);
+    --color-error: oklch(0.65 0.20 25);
+    --color-info: oklch(0.65 0.10 210);
+    --elevation-base: oklch(0.13 0.02 260);
+    --elevation-raised: oklch(0.18 0.02 260);
+    --elevation-overlay: oklch(0.22 0.02 260);
+  }
 }
 ```
 
