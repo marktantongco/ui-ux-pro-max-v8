@@ -6,7 +6,7 @@ description: >
   advanced patterns, creative brief workflows, error boundaries, form handling, GSAP animations,
   keyboard navigation, ARIA attributes, or any "build"/"implement"/"code" intent.
   Contains Module 1 (Creative Brief Engine), Module 4 (Component Library with 22+ components),
-  Module 5 (Motion Presets — 24 patterns), Module 6 (Validation & Audit — 42 checks),
+  Module 5 (Motion Presets — 24 patterns), Module 6 (Validation & Audit — 80+ checks),
   Module 8 (Cross-Reference Integration), and Module 10 (Advanced Patterns).
   For design tokens, CSS primitives, palettes, and theming, use ui-ux-pro-max-v8-infra.
   For data lookups (palette for industry, font pairing, style specs), use ui-ux-pro-max-v8-data.
@@ -60,6 +60,8 @@ This file provides component implementations and patterns. For design context an
 - Module 1 MATCH step → queries Part C data files for best-fit style/palette/font/rule
 - Module 5 motion presets → reference Part A Module 3 CSS primitives
 - Module 6 validation → checks Part A Module 2 contrast compliance
+
+> **Module Numbering:** This file contains Modules 1, 4, 5, 6, 8, 10. Modules 2, 3, 7, 9 are in Part A (ui-ux-pro-max-v8-infra). Module 7 data files are in Part C (ui-ux-pro-max-v8-data).
 
 ---
 
@@ -347,6 +349,7 @@ function AccordionItemComponent({
           id={triggerId}
           aria-expanded={isOpen}
           aria-controls={contentId}
+          disabled={item.disabled}
           aria-disabled={item.disabled}
           data-item-id={item.id}
           onClick={item.disabled ? undefined : onToggle}
@@ -444,6 +447,7 @@ function Tabs({ items, defaultTab, ref }: TabsProps) {
             role="tab"
             aria-selected={activeTab === item.id}
             aria-controls={`${tabListId}-panel-${item.id}`}
+            disabled={item.disabled}
             aria-disabled={item.disabled}
             tabIndex={activeTab === item.id ? 0 : -1}
             onClick={() => !item.disabled && setActiveTab(item.id)}
@@ -664,6 +668,8 @@ function SkeletonCard({ index }: { index: number }) {
 
 > **Fix:** Removed `aria-hidden="true"` from the Skeleton component. `role="status"` makes this a live region that screen readers should announce — adding `aria-hidden="true"` contradicts that purpose and makes the loading state invisible to assistive technologies.
 
+> **Note:** `animate-pulse` respects `prefers-reduced-motion` in Tailwind v4 by default. In Tailwind v3 or custom setups, add: `@media (prefers-reduced-motion: reduce) { .animate-pulse { animation: none; } }`
+
 ## 4.5 Skip Link
 
 ```tsx
@@ -828,6 +834,8 @@ function ThinkingIndicator() {
 }
 ```
 
+> **Note:** `animate-bounce` respects `prefers-reduced-motion` in Tailwind v4 by default. In Tailwind v3 or custom setups, add: `@media (prefers-reduced-motion: reduce) { .animate-bounce { animation: none; } }`
+
 ### Uncertainty Notice
 
 ```tsx
@@ -922,9 +930,15 @@ function ChatComposer({ onSend, disabled }: {
 }
 ```
 
+> **Enhancement:** For production use, add `error?: string` prop, `aria-invalid={!!error}` on the textarea, and error message rendering consistent with Textarea (4.13) and PasswordInput (4.19) components.
+
 ### AI Controls Panel
 
 ```tsx
+'use client';
+
+import { useId } from 'react';
+
 function AIControlsPanel({ model, temperature, onModelChange, onTemperatureChange }: {
   model: string;
   temperature: number;
@@ -1384,6 +1398,9 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
   } = useForm<ContactForm>({
     resolver: zodResolver(contactSchema),
   });
+  const nameId = useId();
+  const emailId = useId();
+  const messageId = useId();
   const subscribeId = useId();
   const nameErrorId = useId();
   const emailErrorId = useId();
@@ -1397,10 +1414,11 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label htmlFor={nameId} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Name <span aria-hidden="true" className="text-red-500">*</span>
         </label>
         <input
+          id={nameId}
           type="text"
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? nameErrorId : undefined}
@@ -1414,10 +1432,11 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label htmlFor={emailId} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Email <span aria-hidden="true" className="text-red-500">*</span>
         </label>
         <input
+          id={emailId}
           type="email"
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? emailErrorId : undefined}
@@ -1431,10 +1450,11 @@ function ContactForm({ onSubmit }: { onSubmit: (data: ContactForm) => Promise<vo
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label htmlFor={messageId} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Message <span aria-hidden="true" className="text-red-500">*</span>
         </label>
         <textarea
+          id={messageId}
           rows={4}
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? messageErrorId : undefined}
@@ -1528,7 +1548,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
         </button>
       </div>
       <div
-        className="h-1 bg-white/30"
+        className="h-1 bg-white/30 toast-progress-bar"
         style={{
           animation: `toast-progress ${duration}ms linear forwards`,
         }}
@@ -2096,22 +2116,30 @@ function DataTable<T extends Record<string, unknown>>({
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((row, i) => (
-            <tr
-              key={i}
-              className={`border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 transition-colors ${
-                onRowClick ? 'cursor-pointer' : ''
-              }`}
-              onClick={() => onRowClick?.(row)}
-              style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}
-            >
-              {columns.map((col) => (
-                <td key={String(col.key)} className="px-4 py-3 dark:text-gray-300">
-                  {col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '')}
-                </td>
-              ))}
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                No data available
+              </td>
             </tr>
-          ))}
+          ) : (
+            sortedData.map((row, i) => (
+              <tr
+                key={i}
+                className={`border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 transition-colors ${
+                  onRowClick ? 'cursor-pointer' : ''
+                }`}
+                onClick={() => onRowClick?.(row)}
+                style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}
+              >
+                {columns.map((col) => (
+                  <td key={String(col.key)} className="px-4 py-3 dark:text-gray-300">
+                    {col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '')}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
@@ -2125,7 +2153,7 @@ function DataTable<T extends Record<string, unknown>>({
 
 ```tsx
 'use client';
-import { useCallback } from 'react';
+import { useMemo } from 'react';
 
 export interface PaginationProps {
   currentPage: number;
@@ -2134,16 +2162,16 @@ export interface PaginationProps {
 }
 
 function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
-  const getPageNumbers = useCallback(() => {
-    const pages: (number | '...')[] = [];
+  const pageNumbers = useMemo(() => {
+    const pages: (number | string)[] = [];
     if (totalPages <= 7) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       pages.push(1);
       if (currentPage > 3) pages.push('...');
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-      for (let i = start; i <= end; i++) pages.push(i);
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        pages.push(i);
+      }
       if (currentPage < totalPages - 2) pages.push('...');
       pages.push(totalPages);
     }
@@ -2160,7 +2188,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
       >
         Previous
       </button>
-      {getPageNumbers().map((page, i) =>
+      {pageNumbers.map((page, i) =>
         page === '...' ? (
           <span key={`ellipsis-${i}`} className="px-2 text-gray-400 dark:text-gray-600" aria-hidden="true">...</span>
         ) : (
@@ -2982,7 +3010,7 @@ The five UI/UX skills form a composable "operating system" for design and implem
 ```
 1. UI/UX Pro Max Module 1 → Creative brief, style selection
 2. UI/UX Pro Max Module 2 → Design tokens, OKLCH palettes
-3. UI/UX Pro Max Module 7 → Font pairing, industry rules
+3. Part C data lookup → Font pairing, industry rules
 4. GSAP Animations → Timeline choreography, ScrollTrigger setup
 5. Motion System Playbook → Library selection (GSAP for scroll, CSS for hovers)
 6. React Best Practices → Server Components for static sections, client for interactive
@@ -2994,7 +3022,7 @@ The five UI/UX skills form a composable "operating system" for design and implem
 
 ```
 1. UI/UX Pro Max Module 1 → Creative brief (AI platform)
-2. UI/UX Pro Max Module 7 → AI-Native UI style, purple/blue palette
+2. Part C data lookup → AI-Native UI style, purple/blue palette
 3. UI/UX Pro Max Module 4 → Thinking indicator, Chat composer, Uncertainty notice
 4. React Best Practices → Streaming with Suspense, SWR for message dedup
 5. Web Design Guidelines → aria-live for message announcements
@@ -3006,7 +3034,7 @@ The five UI/UX skills form a composable "operating system" for design and implem
 
 ```
 1. UI/UX Pro Max Module 1 → Creative brief (fintech/enterprise)
-2. UI/UX Pro Max Module 7 → Data-Dense Dashboard style, banking palette
+2. Part C data lookup → Data-Dense Dashboard style, banking palette
 3. UI/UX Pro Max Module 3 → Container queries for responsive panels
 4. React Best Practices → RSC for data fetching, memo for chart components
 5. Web Design Guidelines → Form accessibility, ARIA for data tables
@@ -3334,12 +3362,12 @@ function LikeButton({ initialLiked, initialCount, onToggle }: {
     <button
       onClick={handleToggle}
       aria-pressed={optimisticState.liked}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
     >
-      <svg className={`w-5 h-5 ${optimisticState.liked ? 'text-red-500 fill-current' : 'text-gray-400'}`} viewBox="0 0 20 20" aria-hidden="true">
+      <svg className={`w-5 h-5 ${optimisticState.liked ? 'text-red-500 fill-current dark:text-red-400' : 'text-gray-400 dark:text-gray-500'}`} viewBox="0 0 20 20" aria-hidden="true">
         <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
       </svg>
-      <span className="text-sm">{optimisticState.count}</span>
+      <span className="text-sm dark:text-gray-100">{optimisticState.count}</span>
     </button>
   );
 }

@@ -17,6 +17,8 @@ version: "8.0.0"
 
 > **Design System Foundation** — Tokens, palettes, CSS primitives, data tables, and theming.
 > Pair with Part B for component implementations and Part C for data lookups.
+>
+> **Module Map:** This file contains Modules 2 (Design Tokens), 3 (CSS Primitives), 7 (Data References), and 9 (Theme System). Modules 1, 4, 5, 6, 8, 10 are in Part B (ui-ux-pro-max-v8-components). Module 7 data files are in Part C (ui-ux-pro-max-v8-data).
 
 ---
 
@@ -274,6 +276,30 @@ hexToOklch('#2563eb'); // { mode: 'oklch', l: 0.55, c: 0.2, h: 260 }
 }
 ```
 
+### Transition Tokens
+
+```css
+:root {
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --easing-out: cubic-bezier(0, 0, 0.2, 1);
+  --easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+```
+
+### Focus Ring Tokens
+
+```css
+:root {
+  --ring-color: oklch(0.55 0.20 260);
+  --ring-width: 2px;
+  --ring-offset: 2px;
+}
+```
+
 ### Breakpoint Tokens (Content-First)
 
 ```css
@@ -403,17 +429,32 @@ const minForeground = reverseAPCA(60, bgRgb, 'fg');
 ### Dual Validation Strategy (2026 Transition)
 
 ```javascript
-function meetsContrast(textColor, bgColor, fontSize, fontWeight) {
+function meetsContrast(textColor, bgColor, fontSize, fontWeight, level = 'minimum') {
   // WCAG 2.x check (required for legal compliance)
   const ratio = wcagContrast(textColor, bgColor);
   const wcagPass = fontSize >= 18 && fontWeight >= 700 ? ratio >= 3 : ratio >= 4.5;
 
-  // APCA check (future-proof)
+  // APCA check (future-proof) — covers all 5 tiers
   const lc = calcAPCA(hexToRgb(textColor), hexToRgb(bgColor));
-  const apcaPass = fontSize >= 24 && fontWeight >= 700 ? lc >= 30
-    : fontSize >= 18 ? lc >= 45 : lc >= 60;
+  const thresholds = {
+    'body-small':   { minimum: 60, preferred: 75 },  // < 18px
+    'body-normal':  { minimum: 45, preferred: 60 },  // 18px+, 400wt
+    'body-large':   { minimum: 30, preferred: 45 },  // 24px+, 700wt
+    'large-text':   { minimum: 25, preferred: 30 },  // 36px+, 700wt
+    'ui-component': { minimum: 15, preferred: 30 },  // borders, icons
+  };
 
-  return { wcagPass, apcaPass, ratio, lc };
+  // Determine tier
+  let tier;
+  if (fontSize >= 36 && fontWeight >= 700) tier = 'large-text';
+  else if (fontSize >= 24 && fontWeight >= 700) tier = 'body-large';
+  else if (fontSize >= 18) tier = 'body-normal';
+  else if (fontSize < 18) tier = 'body-small';
+
+  const apcaThreshold = thresholds[tier]?.[level] ?? thresholds['body-small'][level];
+  const apcaPass = lc >= apcaThreshold;
+
+  return { wcagPass, apcaPass, ratio, lc, tier };
 }
 ```
 
@@ -439,12 +480,12 @@ Tailwind v4 eliminates `tailwind.config.js`. All customization in CSS via `@them
   --color-surface-sunken: oklch(0.95 0.01 260);
 
   /* Spacing — 8-point grid */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
 
   /* Typography */
   --font-body: "Inter", system-ui, sans-serif;
@@ -594,7 +635,7 @@ dialog {
 
 ```css
 .modal {
-  transition: opacity 0.3s, transform 0.3s;
+  transition: opacity 0.3s, transform 0.3s, display 0.3s allow-discrete;
   opacity: 1;
   transform: translateY(0);
 
@@ -604,6 +645,8 @@ dialog {
   }
 }
 ```
+
+> **Note:** `display ... allow-discrete` is required for exit animations when elements are removed from the DOM. `overlay ... allow-discrete` is only needed for top-layer elements (`<dialog>`, `[popover]`).
 
 ## 3.3 @layer
 
@@ -954,6 +997,44 @@ h1, h2, h3 { text-wrap: balance; }
 }
 ```
 
+## 3.12 Emerging CSS Features (2026)
+
+### text-wrap: pretty
+
+Improves paragraph line-breaking algorithm for better typography. Now shipping in Chrome and Safari.
+
+```css
+p { text-wrap: pretty; }
+```
+
+### color-mix() Function
+
+Generate color variants without manual calculation. Works with all color spaces including OKLCH.
+
+```css
+.button-hover {
+  background: color-mix(in oklch, var(--color-primary) 85%, white);
+}
+
+.button-subtle {
+  background: color-mix(in oklch, var(--color-primary) 15%, var(--surface-base));
+}
+```
+
+### CSS Math Functions
+
+```css
+/* Clamp with rounding */
+.grid-cols {
+  grid-template-columns: repeat(round(down, 100% / 250px, 1), 1fr);
+}
+
+/* Absolute value and sign */
+.transform-offset {
+  translate: 0 calc(sign(var(--direction)) * var(--distance));
+}
+```
+
 ---
 
 # MODULE 7: DATA TABLE REFERENCES
@@ -968,7 +1049,7 @@ The full data tables (67 UI styles, 96 color palettes, 57 font pairings, 100 ind
 | Color Palettes | `ui-ux-pro-max-v8-data/data/colors.csv` | 96 palettes with OKLCH + Hex, primary/secondary/CTA/bg/text |
 | Font Pairings | `ui-ux-pro-max-v8-data/data/typography.csv` | 57 verified Google Fonts pairs with mood, best-for, URLs |
 | Industry Rules | `ui-ux-pro-max-v8-data/data/ui-reasoning.csv` | 100 rules: pattern, style, color mood, typography, effects, anti-patterns |
-| Landing Patterns | `ui-ux-pro-max-v8-data/data/landing.csv` | 8 landing page patterns with conversion focus |
+| Landing Patterns | `ui-ux-pro-max-v8-data/data/landing.csv` | 27 landing page patterns with conversion focus |
 | UX Guidelines | `ui-ux-pro-max-v8-data/data/ux-guidelines.csv` | Accessibility and UX audit guidelines |
 | Web Interface | `ui-ux-pro-max-v8-data/data/web-interface.csv` | Web interface audit criteria |
 | Charts | `ui-ux-pro-max-v8-data/data/charts.csv` | Chart type recommendations |
@@ -980,18 +1061,24 @@ The full data tables (67 UI styles, 96 color palettes, 57 font pairings, 100 ind
 ## Quick Reference: Data Categories
 
 ### UI Styles (67)
-- **General (42):** Minimalism, Neumorphism, Glassmorphism, Brutalism, 3D, Dark Mode OLED, Accessible & Ethical, Claymorphism, Aurora UI, Retro-Futurism, Flat Design 2.0, Soft UI, Neubrutalism, Bento Grid, Y2K, Cyberpunk, Biophilic, AI-Native UI, Vaporwave, Dimensional Layering, Exaggerated Minimalism, Kinetic Typography, Parallax Storytelling, Swiss Modernism 2.0, HUD/Sci-Fi FUI, Pixel Art, Spatial UI, E-Ink/Paper, Gen Z Chaos, Biomimetic, Anti-Polish/Raw, Tactile Digital, Nature Distilled, Interactive Cursor, Voice-First, 3D Product Preview, Gradient Mesh/Aurora Evolved, Editorial Grid, Chromatic Aberration, Vintage Analog, Liquid Glass
-- **Landing (8):** Hero-Centric, Conversion-Optimized, Feature-Rich Showcase, Minimal & Direct, Social Proof-Focused, Interactive Demo, Trust & Authority, Storytelling-Driven
-- **Dashboard (10):** Data-Dense, Heat Map, Executive, Real-Time Monitoring, Drill-Down, Comparative, Predictive, User Behavior, Financial, Sales Intelligence
+- **General (49):** Minimalism, Neumorphism, Glassmorphism, Brutalism, 3D, Dark Mode OLED, Accessible & Ethical, Claymorphism, Aurora UI, Retro-Futurism, Flat Design 2.0, Soft UI, Neubrutalism, Bento Grid, Y2K, Cyberpunk, Biophilic, AI-Native UI, Vaporwave, Dimensional Layering, Exaggerated Minimalism, Kinetic Typography, Parallax Storytelling, Swiss Modernism 2.0, HUD/Sci-Fi FUI, Pixel Art, Spatial UI, E-Ink/Paper, Gen Z Chaos, Biomimetic, Anti-Polish/Raw, Tactile Digital, Nature Distilled, Interactive Cursor, Voice-First, 3D Product Preview, Gradient Mesh/Aurora Evolved, Editorial Grid, Chromatic Aberration, Vintage Analog, Liquid Glass, Neo-Victorian Steampunk, Morphism 3.0, Holographic UI, Organic Flow, Maximalist Collage, Cyber-Renaissance, Quantum UI
+- **Landing Page (8):** Hero-Centric, Conversion-Optimized, Feature-Rich Showcase, Minimal & Direct, Social Proof-Focused, Interactive Demo, Trust & Authority, Storytelling-Driven
+- **BI/Analytics (10):** Data-Dense, Heat Map, Executive, Real-Time Monitoring, Drill-Down, Comparative, Predictive, User Behavior, Financial, Sales Intelligence
 
 ### Color Palettes (96 — OKLCH + Hex)
-SaaS & Tech (8), E-Commerce (8), Healthcare (6), Finance & Insurance (6), Beauty & Wellness (6), Creative & Education (8), Restaurant & Hospitality (6)
+96 individual industry categories, each with Primary, Secondary, CTA, Background, Text, and Border hex colors. Categories include SaaS, Fintech, Healthcare, E-Commerce, Education, Restaurant, Beauty, Creative, Travel, Legal, Social Media, Gaming, and more.
 
 ### Font Pairings (57 — Verified Google Fonts)
-Sans-Serif Pairs (16), Serif + Sans Pairs (12), Monospace + Sans Pairs (5), Self-Hosted Fonts (16 alternatives)
+- **Sans + Sans (24):** Modern and clean pairings for tech, startup, and SaaS interfaces
+- **Serif + Sans (13):** Elegant contrasts for editorial, luxury, and professional contexts
+- **Display + Sans (10):** Bold headlines with readable body text for landing pages and marketing
+- **Mono + Sans (2):** Technical and code-focused pairings for developer tools
+- **Serif + Serif (2):** Classic and traditional pairings for editorial and book design
+- **Mono + Mono (2):** Terminal and code-focused pairings for developer documentation
+- **Plus 4 additional specialized pairings**
 
 ### Industry Rules (100)
-Technology & SaaS (5), Finance & Insurance (4), Healthcare (4), E-Commerce & Services (4), Creative & Education (4)
+100 individual industry categories with recommended UI patterns, style priorities, color moods, typography moods, key effects, decision rules, and anti-patterns. Each entry provides a complete UI reasoning chain from product type to design decisions.
 
 ---
 
@@ -1005,7 +1092,7 @@ Dark mode must be more than inverting colors. Never simply swap white for black 
 
 ```css
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 /* Full token declarations are in Module 9.4. */
@@ -1077,7 +1164,7 @@ const ThemeContext = createContext<{
   resolved: 'light' | 'dark';
 }>({ theme: 'system', setTheme: () => {}, resolved: 'light' });
 
-function ThemeProvider({ children }: { children: React.ReactNode }) {
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === 'undefined') return 'system';
     const stored = localStorage.getItem('theme') as Theme | null;
@@ -1119,7 +1206,7 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-function useTheme() {
+export function useTheme() {
   return useContext(ThemeContext);
 }
 ```
@@ -1149,36 +1236,60 @@ Add this inline script in `<head>` before any CSS loads:
 ```
 
 ```html
-<div class="bg-white dark:bg-gray-900">
-  <p class="text-gray-900 dark:text-gray-100">Hello</p>
+<div class="bg-surface-base dark:bg-surface-base">
+  <p class="text-text-primary dark:text-text-primary">Hello</p>
 </div>
 ```
 
 ## 9.4 Complete Dark Mode Token Architecture
 
 ```css
-/* Light theme (default) */
+/* Light theme — hex fallbacks first */
 :root {
-  --color-bg-primary: oklch(0.98 0.01 260);
-  --color-bg-secondary: oklch(1.0 0.00 0);
-  --color-bg-tertiary: oklch(0.95 0.01 260);
-  --color-bg-inverse: oklch(0.15 0.02 260);
-  --color-text-primary: oklch(0.15 0.02 260);
-  --color-text-secondary: oklch(0.35 0.02 260);
-  --color-text-tertiary: oklch(0.55 0.02 260);
-  --color-text-inverse: oklch(0.98 0.01 260);
-  --color-border-default: oklch(0.88 0.01 260);
-  --color-border-strong: oklch(0.75 0.02 260);
-  --color-primary: oklch(0.55 0.20 260);
-  --color-primary-hover: oklch(0.50 0.22 260);
-  --color-primary-subtle: oklch(0.55 0.20 260 / 0.1);
-  --color-success: oklch(0.65 0.17 145);
-  --color-warning: oklch(0.72 0.15 85);
-  --color-error: oklch(0.55 0.22 25);
-  --color-info: oklch(0.58 0.12 210);
+  color-scheme: light;
+  --color-bg-primary: #f8f9fb;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #eef0f4;
+  --color-bg-inverse: #1a1f2e;
+  --color-text-primary: #1a1f2e;
+  --color-text-secondary: #4a5068;
+  --color-text-tertiary: #737880;
+  --color-text-inverse: #f8f9fb;
+  --color-border-default: #d4d7de;
+  --color-border-strong: #9da3b0;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-subtle: rgba(37, 99, 235, 0.1);
+  --color-success: #16a34a;
+  --color-warning: #ca8a04;
+  --color-error: #dc2626;
+  --color-info: #0891b2;
   --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px rgb(0 0 0 / 0.1);
+}
+
+/* Progressive enhancement: OKLCH overrides for perceptually uniform values */
+@supports (color: oklch(0 0 0)) {
+  :root {
+    --color-bg-primary: oklch(0.98 0.01 260);
+    --color-bg-secondary: oklch(1.0 0.00 0);
+    --color-bg-tertiary: oklch(0.95 0.01 260);
+    --color-bg-inverse: oklch(0.15 0.02 260);
+    --color-text-primary: oklch(0.15 0.02 260);
+    --color-text-secondary: oklch(0.35 0.02 260);
+    --color-text-tertiary: oklch(0.55 0.02 260);
+    --color-text-inverse: oklch(0.98 0.01 260);
+    --color-border-default: oklch(0.88 0.01 260);
+    --color-border-strong: oklch(0.75 0.02 260);
+    --color-primary: oklch(0.55 0.20 260);
+    --color-primary-hover: oklch(0.50 0.22 260);
+    --color-primary-subtle: oklch(0.55 0.20 260 / 0.1);
+    --color-success: oklch(0.65 0.17 145);
+    --color-warning: oklch(0.72 0.15 85);
+    --color-error: oklch(0.55 0.22 25);
+    --color-info: oklch(0.58 0.12 210);
+  }
 }
 
 /* Dark theme — hex fallbacks first */

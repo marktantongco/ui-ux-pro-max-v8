@@ -35,8 +35,8 @@
         {"column": "Effects & Animation", "type": "string", "description": "Animation and effect specifications"},
         {"column": "Best For", "type": "string", "description": "Recommended use cases"},
         {"column": "Do Not Use For", "type": "string", "description": "Inappropriate use cases"},
-        {"column": "Light Mode", "type": "string", "description": "Light mode compatibility rating"},
-        {"column": "Dark Mode", "type": "string", "description": "Dark mode compatibility rating"},
+        {"column": "Light Mode ✓", "type": "string", "description": "Light mode compatibility rating"},
+        {"column": "Dark Mode ✓", "type": "string", "description": "Dark mode compatibility rating"},
         {"column": "Performance", "type": "string", "description": "Performance impact rating"},
         {"column": "Accessibility", "type": "string", "description": "Accessibility compliance level"},
         {"column": "Mobile-Friendly", "type": "string", "description": "Mobile compatibility rating"},
@@ -181,8 +181,8 @@
     {
       "path": "data/landing.csv",
       "domain": "landing",
-      "recordCount": 30,
-      "description": "Landing page pattern specifications for 30 conversion-focused layouts. Includes section order, CTA placement, color strategy, effects, and conversion optimization tips.",
+      "recordCount": 27,
+      "description": "Landing page pattern specifications for 27 conversion-focused layouts. Includes section order, CTA placement, color strategy, effects, and conversion optimization tips.",
       "schema": [
         {"column": "No", "type": "integer", "description": "Row index"},
         {"column": "Pattern Name", "type": "string", "description": "Landing page pattern name"},

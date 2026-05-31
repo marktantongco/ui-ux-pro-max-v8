@@ -73,7 +73,7 @@ Essential design rules for applying data lookups correctly. For full theory, see
 | `reasoning` | `data/ui-reasoning.csv` | 100 | Product → UI pattern reasoning engine |
 | `web` | `data/web-interface.csv` | 30 | Web interface guidelines (React/Next.js) |
 | `performance` | `data/react-performance.csv` | 44 | React/Next.js performance patterns |
-| `landing` | `data/landing.csv` | 30 | Landing page pattern specs |
+| `landing` | `data/landing.csv` | 27 | Landing page pattern specs |
 | `product` | `data/products.csv` | 96 | Product type → style/pattern mapping |
 | `stack:astro` | `data/stacks/astro.csv` | 53 | Astro framework best practices |
 | `stack:flutter` | `data/stacks/flutter.csv` | 52 | Flutter framework best practices |
@@ -89,7 +89,7 @@ Essential design rules for applying data lookups correctly. For full theory, see
 | `stack:swiftui` | `data/stacks/swiftui.csv` | 50 | SwiftUI best practices |
 | `stack:vue` | `data/stacks/vue.csv` | 49 | Vue.js best practices |
 
-**Total: 24 data files, 1,325 records across 11 core domains + 13 framework stacks.**
+**Total: 24 data files, 1,322 records across 11 core domains + 13 framework stacks.**
 
 ## Lookup Script Usage
 
@@ -189,8 +189,8 @@ Short aliases are supported for convenience:
 | Effects & Animation | string | Animation/effect specifications |
 | Best For | string | Recommended use cases |
 | Do Not Use For | string | Inappropriate use cases |
-| Light Mode | string | Light mode compatibility |
-| Dark Mode | string | Dark mode compatibility |
+| Light Mode ✓ | string | Light mode compatibility |
+| Dark Mode ✓ | string | Dark mode compatibility |
 | Performance | string | Performance impact rating |
 | Accessibility | string | Accessibility compliance level |
 | Mobile-Friendly | string | Mobile compatibility rating |
@@ -203,7 +203,7 @@ Short aliases are supported for convenience:
 | Implementation Checklist | string | Checklist items |
 | Design System Variables | string | CSS custom property definitions |
 
-### typography.csv (56 records)
+### typography.csv (57 records)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -219,7 +219,7 @@ Short aliases are supported for convenience:
 | Tailwind Config | string | Tailwind CSS fontFamily config |
 | Notes | string | Usage notes |
 
-### ux-guidelines.csv (98 records)
+### ux-guidelines.csv (99 records)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -249,7 +249,7 @@ Short aliases are supported for convenience:
 | Anti_Patterns | string | What to avoid |
 | Severity | string | Priority level (HIGH/MEDIUM) |
 
-### products.csv (95 records)
+### products.csv (96 records)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -262,6 +262,19 @@ Short aliases are supported for convenience:
 | Dashboard Style | string | Dashboard pattern (if applicable) |
 | Color Palette Focus | string | Color palette direction |
 | Key Considerations | string | Important design considerations |
+
+### landing.csv (27 records)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| No | int | Row index |
+| Pattern Name | string | Landing page pattern name |
+| Keywords | string | Search keywords |
+| Section Order | string | Recommended section sequence |
+| Primary CTA Placement | string | Where to place the main CTA |
+| Color Strategy | string | Color scheme recommendations |
+| Recommended Effects | string | Animation and effect suggestions |
+| Conversion Optimization | string | Conversion-focused tips |
 
 ### Stack CSV files (13 frameworks, 49–60 records each)
 
